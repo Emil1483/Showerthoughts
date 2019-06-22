@@ -60,7 +60,7 @@ class ThoughtTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 132.0,
+      height: 144.0,
       padding: EdgeInsets.symmetric(
         horizontal: 22.0,
         vertical: 12.0,
