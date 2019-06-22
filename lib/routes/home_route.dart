@@ -1,15 +1,11 @@
 import 'package:flutter/material.dart';
 
-import '../ui_elements/joke_tile.dart';
+import '../models/thought.dart';
+import '../ui_elements/thought_tile.dart';
+import '../apis/reddit_api.dart';
 
 class HomeRoute extends StatelessWidget {
-  Future _fetchJoke() async {
-    await Future.delayed(Duration());
-    return {
-      "joke": "Hi hungry, im dad",
-      'author': "dad",
-    };
-  }
+  final Api _redditApi = Api();
 
   @override
   Widget build(BuildContext context) {
@@ -24,18 +20,30 @@ class HomeRoute extends StatelessWidget {
             delegate: SliverChildBuilderDelegate(
               (BuildContext context, int index) {
                 return FutureBuilder(
-                  future: _fetchJoke(),
+                  future: _redditApi.nextThougths(),
                   builder: (context, AsyncSnapshot snapshot) {
                     if (snapshot.connectionState != ConnectionState.done) {
-                      return JokeTile(joke: null);
-                    } else {
-                      return JokeTile(
-                        joke: {
-                          "joke":
-                              "Hi hungry, im dad. And this is a really long showerthought. To be or not to be. That is the question. ",
-                          'author': "dad",
-                        },
+                      return ListView(
+                        shrinkWrap: true,
+                        primary: false,
+                        children: List.generate(100, (int index) {
+                          return ThoughtTile(
+                            thought: null,
+                          );
+                        }),
                       );
+                    } else {
+                      final List<Thougth> data = snapshot.data;
+                      return ListView(
+                          shrinkWrap: true,
+                          primary: false,
+                          children: data.map(
+                            (Thougth thought) {
+                              return ThoughtTile(
+                                thought: thought,
+                              );
+                            },
+                          ).toList());
                     }
                   },
                 );

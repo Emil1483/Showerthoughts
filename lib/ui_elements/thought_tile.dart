@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
-class JokeTile extends StatelessWidget {
-  final Map<String, dynamic> joke;
-  JokeTile({@required this.joke});
+import '../models/thought.dart';
+
+class ThoughtTile extends StatelessWidget {
+  final Thougth thought;
+  ThoughtTile({@required this.thought});
 
   Widget _buildTitle(BuildContext context) {
     TextStyle style = Theme.of(context).textTheme.title;
@@ -11,7 +13,7 @@ class JokeTile extends StatelessWidget {
         flex: 1,
         child: SingleChildScrollView(
           child: Text(
-            joke["joke"],
+            thought.thougth,
             style: style,
           ),
         ),
@@ -36,7 +38,7 @@ class JokeTile extends StatelessWidget {
       return Expanded(
         flex: 0,
         child: Text(
-          joke["author"],
+          thought.author,
           style: style,
         ),
       );
