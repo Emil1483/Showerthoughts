@@ -17,7 +17,6 @@ class _HomeRouteState extends State<HomeRoute> {
 
   Future<List<Thougth>> _getThoughts() async {
     final thoughts = await _redditApi.nextThougths();
-    print(thoughts);
     if (thoughts == null) {
       setState(() {
         _hasError = true;
@@ -39,14 +38,7 @@ class _HomeRouteState extends State<HomeRoute> {
   Widget build(BuildContext context) {
     Widget afterAppBar = _hasError
         ? SliverFillRemaining(
-            child: RefreshIndicator(
-              onRefresh: _onRefresh,
-              child: ListView(
-                children: <Widget>[
-                  Error(),
-                ],
-              ),
-            ),
+            child: Error(),
           )
         : SliverList(
             delegate: SliverChildBuilderDelegate(
@@ -87,15 +79,19 @@ class _HomeRouteState extends State<HomeRoute> {
           );
 
     return Scaffold(
-      body: CustomScrollView(
-        slivers: <Widget>[
-          SliverAppBar(
-            expandedHeight: 200.0,
-            floating: true,
-            flexibleSpace: Image.asset("assets/shower.png"),
-          ),
-          afterAppBar,
-        ],
+      body: RefreshIndicator(
+        onRefresh: _onRefresh,
+        notificationPredicate: (_) => _hasError,
+        child: CustomScrollView(
+          slivers: <Widget>[
+            SliverAppBar(
+              expandedHeight: 200.0,
+              floating: true,
+              flexibleSpace: Image.asset("assets/shower.png"),
+            ),
+            afterAppBar,
+          ],
+        ),
       ),
     );
   }
