@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:auto_size_text/auto_size_text.dart';
+
 import '../models/thought.dart';
 
 class ThoughtTile extends StatelessWidget {
@@ -12,9 +14,11 @@ class ThoughtTile extends StatelessWidget {
       return Expanded(
         flex: 1,
         child: SingleChildScrollView(
-          child: Text(
+          child: AutoSizeText(
             thought.thougth,
             style: style,
+            maxLines: 4,
+            minFontSize: 16,
           ),
         ),
       );
