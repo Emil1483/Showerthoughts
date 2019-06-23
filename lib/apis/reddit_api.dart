@@ -12,7 +12,7 @@ class Api {
   Future<List<Thougth>> nextThougths() async {
     try {
       final Uri uri = Uri.parse(
-          "https://www.reddit.com/r/Showerthoughts/best.json?limit=100&after=$_lastPost");
+          "https://www.reddit.com/r/Showerthoughts/best.json?limit=10&after=$_lastPost");
       final httpRequest = await _httpClient.getUrl(uri);
       final httpResponse = await httpRequest.close();
       if (httpResponse.statusCode != HttpStatus.ok) return null;
@@ -22,9 +22,6 @@ class Api {
       final int len = jsonResponse["data"]["children"].length;
       currentLen += len;
       _lastPost = jsonResponse["data"]["children"][len - 1]["data"]["name"];
-      print(_lastPost);
-      print(currentLen);
-      print(jsonResponse["data"]["children"][2]["data"]["title"]);
       List<Thougth> result = [];
       for (int i = 0; i < len; i++) {
         result.add(
