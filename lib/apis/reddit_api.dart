@@ -11,19 +11,47 @@ class Api {
 
   static int batchSize = 10;
 
-  Future<List<Thougth>> nextThougths() async {
+  Future<bool> test() async {
     try {
       final Uri uri = Uri.parse(
           "https://www.reddit.com/r/Showerthoughts/best.json?limit=$batchSize&after=$_lastPost");
+
       final httpRequest = await _httpClient.getUrl(uri);
+      final httpResponse = await httpRequest.close();
+
+      if (httpResponse.statusCode != HttpStatus.ok) return false;
+
+      final responseBody = await httpResponse.transform(utf8.decoder).join();
+      final jsonResponse = json.decode(responseBody);
+
+      final int len = jsonResponse["data"]["children"].length;
+      String thought =
+          jsonResponse["data"]["children"][len - 1]["data"]["title"];
+
+      if (thought == null) return false;
+
+      return true;
+    } on Exception catch (e) {
+      print("Error: $e");
+      return false;
+    }
+  }
+
+  Future<List<Thougth>> nextThougths() async {
+    
+    try {
+      final Uri uri = Uri.parse(
+          "https://www.reddit.com/r/Showerthoughts/best.json?limit=$batchSize&after=$_lastPost");
+
+      final httpRequest = await _httpClient.getUrl(uri);
+
       final httpResponse = await httpRequest.close();
       if (httpResponse.statusCode != HttpStatus.ok) return null;
 
       final responseBody = await httpResponse.transform(utf8.decoder).join();
+
       final jsonResponse = json.decode(responseBody);
       final int len = jsonResponse["data"]["children"].length;
-      currentLen += len;
-      _lastPost = jsonResponse["data"]["children"][len - 1]["data"]["name"];
       List<Thougth> result = [];
       for (int i = 0; i < len; i++) {
         result.add(
@@ -33,6 +61,8 @@ class Api {
           ),
         );
       }
+      currentLen += len;
+      _lastPost = jsonResponse["data"]["children"][len - 1]["data"]["name"];
       return result;
     } on Exception catch (e) {
       print("Error: $e");
