@@ -43,7 +43,8 @@ class HomeRoute extends StatelessWidget {
                         children: data.map(
                           (Thougth thought) {
                             return ThoughtTile(
-                              thought: thought,
+                              thought: null,
+                              //thought: thought,
                             );
                           },
                         ).toList(),

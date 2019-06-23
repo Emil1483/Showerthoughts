@@ -14,6 +14,7 @@ class MyApp extends StatelessWidget {
         brightness: Brightness.dark,
         canvasColor: Colors.black,
         cardColor: Color(0xff212121),
+        highlightColor: Color(0xff333333),
         appBarTheme: AppBarTheme(
           color: Colors.black,
         ),

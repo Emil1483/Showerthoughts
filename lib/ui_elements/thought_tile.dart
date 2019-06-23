@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 
 import '../models/thought.dart';
+import './loading_rect.dart';
 
 class ThoughtTile extends StatelessWidget {
   final Thougth thought;
@@ -29,7 +30,11 @@ class ThoughtTile extends StatelessWidget {
           margin: EdgeInsets.all(8.0),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(2.0),
-            color: Theme.of(context).splashColor,
+            color: Theme.of(context).highlightColor,
+          ),
+          child: LoadingRect(
+            mainColor: Theme.of(context).highlightColor,
+            secColor: Theme.of(context).highlightColor.withOpacity(0.7),
           ),
         ),
       );
@@ -54,7 +59,10 @@ class ThoughtTile extends StatelessWidget {
           width: 102.0,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(2.0),
-            color: Theme.of(context).splashColor,
+          ),
+          child: LoadingRect(
+            mainColor: Theme.of(context).highlightColor,
+            secColor: Theme.of(context).highlightColor.withOpacity(0.7),
           ),
         ),
       );
