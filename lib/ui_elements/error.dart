@@ -96,8 +96,6 @@ class NoisePainter extends CustomPainter {
         val = math.min(val, 255);
         val = math.max(val, 0);
 
-        //if (val < 0) continue;
-
         canvas.drawRect(
           Rect.fromLTWH(x, y, pixelSize, pixelSize),
           paint..color = color.withAlpha(val.round()),
