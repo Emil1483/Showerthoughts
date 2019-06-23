@@ -12,12 +12,17 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         brightness: Brightness.dark,
+        canvasColor: Colors.black,
+        cardColor: Color(0xff212121),
+        appBarTheme: AppBarTheme(
+          color: Colors.black,
+        ),
         textTheme: TextTheme(
           title: TextStyle(
             fontWeight: FontWeight.w400,
           ),
           subtitle: TextStyle(
-            color: Colors.white54,
+            color: Colors.deepPurple[300],
             fontSize: 14.0,
             fontWeight: FontWeight.w400,
           ),

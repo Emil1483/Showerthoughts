@@ -42,7 +42,7 @@ class ThoughtTile extends StatelessWidget {
       return Expanded(
         flex: 0,
         child: Text(
-          thought.author,
+          "- ${thought.author}",
           style: style,
         ),
       );

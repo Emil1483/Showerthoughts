@@ -15,6 +15,7 @@ class HomeRoute extends StatelessWidget {
           SliverAppBar(
             expandedHeight: 200.0,
             floating: true,
+            flexibleSpace: Image.asset("assets/shower.png"),
           ),
           SliverList(
             delegate: SliverChildBuilderDelegate(
@@ -24,6 +25,7 @@ class HomeRoute extends StatelessWidget {
                   builder: (context, AsyncSnapshot snapshot) {
                     if (snapshot.connectionState != ConnectionState.done) {
                       return ListView(
+                        padding: EdgeInsets.all(0),
                         shrinkWrap: true,
                         primary: false,
                         children: List.generate(Api.batchSize, (int index) {
