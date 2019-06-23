@@ -27,6 +27,10 @@ class MyApp extends StatelessWidget {
             fontSize: 14.0,
             fontWeight: FontWeight.w400,
           ),
+          headline: TextStyle(
+            fontSize: 37.0,
+            fontWeight: FontWeight.w300,
+          ),
         ),
       ),
       routes: {

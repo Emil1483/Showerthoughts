@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:fast_noise/fast_noise.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
 class Error extends StatefulWidget {
   @override
@@ -48,14 +49,47 @@ class _ErrorState extends State<Error> with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Container(
       height: MediaQuery.of(context).size.width,
-      child: AnimatedBuilder(
-        animation: _controller,
-        builder: (BuildContext context, Widget child) {
-          double off = _controller.value + loops;
-          return CustomPaint(
-            painter: NoisePainter(noise: _perlinNoise, off: off),
-          );
-        },
+      child: Stack(
+        fit: StackFit.expand,
+        children: <Widget>[
+          AnimatedBuilder(
+            animation: _controller,
+            builder: (BuildContext context, Widget child) {
+              double off = _controller.value + loops;
+              return CustomPaint(
+                painter: NoisePainter(noise: _perlinNoise, off: off),
+              );
+            },
+          ),
+          Center(
+            child: Container(
+              color: Theme.of(context).canvasColor,
+              height: 200.0,
+              width: double.infinity,
+              padding: EdgeInsets.symmetric(
+                horizontal: 22.0,
+                vertical: 8.0,
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  AutoSizeText(
+                    "Shower thoughts are down",
+                    style: Theme.of(context).textTheme.headline,
+                    textAlign: TextAlign.center,
+                    maxLines: 2,
+                  ),
+                  AutoSizeText(
+                    "Check your internet",
+                    style: Theme.of(context).textTheme.subhead,
+                    textAlign: TextAlign.center,
+                    maxLines: 1,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
