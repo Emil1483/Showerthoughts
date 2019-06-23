@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../models/thought.dart';
 import '../ui_elements/thought_tile.dart';
 import '../apis/reddit_api.dart';
+import '../ui_elements/error.dart';
 
 class HomeRoute extends StatefulWidget {
   @override
@@ -42,10 +43,7 @@ class _HomeRouteState extends State<HomeRoute> {
               onRefresh: _onRefresh,
               child: ListView(
                 children: <Widget>[
-                  Container(
-                    height: 100.0,
-                    color: Colors.orange,
-                  ),
+                  Error(),
                 ],
               ),
             ),
