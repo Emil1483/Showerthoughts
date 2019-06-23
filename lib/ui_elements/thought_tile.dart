@@ -9,6 +9,8 @@ class ThoughtTile extends StatelessWidget {
   final Thougth thought;
   ThoughtTile({@required this.thought});
 
+  final double highlightOpacity = 0.8;
+
   Widget _buildTitle(BuildContext context) {
     TextStyle style = Theme.of(context).textTheme.title;
     try {
@@ -34,7 +36,7 @@ class ThoughtTile extends StatelessWidget {
           ),
           child: LoadingRect(
             mainColor: Theme.of(context).highlightColor,
-            secColor: Theme.of(context).highlightColor.withOpacity(0.7),
+            secColor: Theme.of(context).highlightColor.withOpacity(highlightOpacity),
           ),
         ),
       );
@@ -62,7 +64,7 @@ class ThoughtTile extends StatelessWidget {
           ),
           child: LoadingRect(
             mainColor: Theme.of(context).highlightColor,
-            secColor: Theme.of(context).highlightColor.withOpacity(0.7),
+            secColor: Theme.of(context).highlightColor.withOpacity(highlightOpacity),
           ),
         ),
       );
