@@ -26,7 +26,7 @@ class HomeRoute extends StatelessWidget {
                       return ListView(
                         shrinkWrap: true,
                         primary: false,
-                        children: List.generate(100, (int index) {
+                        children: List.generate(Api.batchSize, (int index) {
                           return ThoughtTile(
                             thought: null,
                           );
@@ -35,15 +35,17 @@ class HomeRoute extends StatelessWidget {
                     } else {
                       final List<Thougth> data = snapshot.data;
                       return ListView(
-                          shrinkWrap: true,
-                          primary: false,
-                          children: data.map(
-                            (Thougth thought) {
-                              return ThoughtTile(
-                                thought: thought,
-                              );
-                            },
-                          ).toList());
+                        padding: EdgeInsets.all(0),
+                        shrinkWrap: true,
+                        primary: false,
+                        children: data.map(
+                          (Thougth thought) {
+                            return ThoughtTile(
+                              thought: thought,
+                            );
+                          },
+                        ).toList(),
+                      );
                     }
                   },
                 );

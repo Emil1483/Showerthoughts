@@ -9,10 +9,12 @@ class Api {
   int currentLen = 0;
   String _lastPost = "t3_bpql00";
 
+  static int batchSize = 10;
+
   Future<List<Thougth>> nextThougths() async {
     try {
       final Uri uri = Uri.parse(
-          "https://www.reddit.com/r/Showerthoughts/best.json?limit=10&after=$_lastPost");
+          "https://www.reddit.com/r/Showerthoughts/best.json?limit=$batchSize&after=$_lastPost");
       final httpRequest = await _httpClient.getUrl(uri);
       final httpResponse = await httpRequest.close();
       if (httpResponse.statusCode != HttpStatus.ok) return null;
