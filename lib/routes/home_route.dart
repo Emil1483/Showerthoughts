@@ -18,23 +18,28 @@ class _HomeRouteState extends State<HomeRoute> {
 
   //TODO: Implement heart functionality
 
-  Future<List<Thougth>> _getThoughts(int index) async {
-    if (index < _thoughts.length) {
-      return _thoughts[index];
-    } else {
-      final thoughts = await _redditApi.nextThougths();
-      if (thoughts == null) {
-        setState(() {
-          _hasError = true;
-        });
-        return null;
-      }
-      _thoughts.add(thoughts);
-      if (_containesDuplicates()) {
-        print("WARNING: _thoughts containes duplicates");
-      }
-      return thoughts;
+  Future<List<Thougth>> _getThoughts(int index, BuildContext context) async {
+    if (index < _thoughts.length) return _thoughts[index];
+
+    final thoughts = await _redditApi.nextThougths();
+    if (thoughts == null) {
+      setState(() {
+        _hasError = true;
+      });
+      return null;
     }
+    _thoughts.add(thoughts);
+    if (_containesDuplicates()) {
+      print("WARNING: _thoughts containes duplicates");
+      Scaffold.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            "WARNING: _thoughts containes duplicates", //TODO: Remove this when done
+          ),
+        ),
+      );
+    }
+    return thoughts;
   }
 
   bool _containesDuplicates() {
@@ -76,7 +81,7 @@ class _HomeRouteState extends State<HomeRoute> {
             delegate: SliverChildBuilderDelegate(
               (BuildContext context, int index) {
                 return FutureBuilder(
-                  future: _getThoughts(index),
+                  future: _getThoughts(index, context),
                   builder: (context, AsyncSnapshot snapshot) {
                     if (snapshot.connectionState != ConnectionState.done) {
                       return ListView(
