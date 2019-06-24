@@ -11,6 +11,8 @@ class Api {
 
   static int batchSize = 10;
 
+  bool _working = false;
+
   Future<bool> test() async {
     try {
       final Uri uri = Uri.parse(
@@ -38,7 +40,10 @@ class Api {
   }
 
   Future<List<Thougth>> nextThougths() async {
-    
+    while (_working) {
+      await Future.delayed(Duration(milliseconds: 200));
+    }
+    _working = true;
     try {
       final Uri uri = Uri.parse(
           "https://www.reddit.com/r/Showerthoughts/best.json?limit=$batchSize&after=$_lastPost");
@@ -46,7 +51,10 @@ class Api {
       final httpRequest = await _httpClient.getUrl(uri);
 
       final httpResponse = await httpRequest.close();
-      if (httpResponse.statusCode != HttpStatus.ok) return null;
+      if (httpResponse.statusCode != HttpStatus.ok) {
+        _working = false;
+        return null;
+      }
 
       final responseBody = await httpResponse.transform(utf8.decoder).join();
 
@@ -63,9 +71,12 @@ class Api {
       }
       currentLen += len;
       _lastPost = jsonResponse["data"]["children"][len - 1]["data"]["name"];
+
+      _working = false;
       return result;
     } on Exception catch (e) {
       print("Error: $e");
+      _working = false;
       return null;
     }
   }

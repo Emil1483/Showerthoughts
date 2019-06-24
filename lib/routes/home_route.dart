@@ -28,8 +28,30 @@ class _HomeRouteState extends State<HomeRoute> {
         return null;
       }
       _thoughts.add(thoughts);
+      if (_containesDuplicates()) {
+        print("WARNING: _thoughts containes duplicates");
+      }
       return thoughts;
     }
+  }
+
+  bool _containesDuplicates() {
+    List<Thougth> allThoughts = [];
+    for (List<Thougth> thoughts in _thoughts) {
+      for (Thougth thought in thoughts) {
+        allThoughts.add(thought);
+      }
+    }
+    for (int i = 0; i < allThoughts.length - 1; i++) {
+      Thougth thought1 = allThoughts[i];
+      for (int j = i + 1; j < allThoughts.length; j++) {
+        Thougth thought2 = allThoughts[j];
+        if (thought1 == thought2) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 
   Future _onRefresh() async {
