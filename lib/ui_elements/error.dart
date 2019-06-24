@@ -6,6 +6,16 @@ import 'package:fast_noise/fast_noise.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 
 class Error extends StatefulWidget {
+  final double pixelSize;
+  final double pixelBlockRatio;
+  final Color color;
+
+  Error({
+    this.color = Colors.white,
+    this.pixelSize = 18,
+    this.pixelBlockRatio = 1.4,
+  });
+
   @override
   _ErrorState createState() => _ErrorState();
 }
@@ -57,7 +67,13 @@ class _ErrorState extends State<Error> with SingleTickerProviderStateMixin {
             builder: (BuildContext context, Widget child) {
               double off = _controller.value + loops;
               return CustomPaint(
-                painter: NoisePainter(noise: _perlinNoise, off: off),
+                painter: NoisePainter(
+                  noise: _perlinNoise,
+                  off: off,
+                  color: widget.color,
+                  pixelBlockRatio: widget.pixelBlockRatio,
+                  pixelSize: widget.pixelSize,
+                ),
               );
             },
           ),
@@ -108,9 +124,9 @@ class NoisePainter extends CustomPainter {
   NoisePainter({
     @required this.noise,
     @required this.off,
-    this.color = Colors.white,
-    this.pixelSize = 18,
-    double pixelBlockRatio = 1.4,
+    @required this.color,
+    @required this.pixelSize,
+    @required double pixelBlockRatio,
   }) : this.blockSize = pixelSize * pixelBlockRatio;
 
   @override

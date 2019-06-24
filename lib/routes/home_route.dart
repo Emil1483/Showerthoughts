@@ -66,7 +66,9 @@ class _HomeRouteState extends State<HomeRoute> {
   Widget build(BuildContext context) {
     Widget afterAppBar = _hasError
         ? SliverFillRemaining(
-            child: Error(),
+            child: Error(
+              color: Theme.of(context).accentColor,
+            ),
           )
         : SliverList(
             delegate: SliverChildBuilderDelegate(
@@ -115,7 +117,18 @@ class _HomeRouteState extends State<HomeRoute> {
             SliverAppBar(
               expandedHeight: 200.0,
               floating: true,
-              flexibleSpace: Image.asset("assets/shower.png"),
+              flexibleSpace: Image.asset(
+                "assets/shower.png",
+                color: _hasError
+                    ? Theme.of(context).accentColor
+                    : Theme.of(context).indicatorColor,
+              ),
+              actions: <Widget>[
+                IconButton(
+                  icon: Icon(Icons.info),
+                  onPressed: () => Navigator.pushNamed(context, "/about"),
+                ),
+              ],
             ),
             afterAppBar,
           ],

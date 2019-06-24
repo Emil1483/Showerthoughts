@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import './routes/home_route.dart';
+import './routes/about_route.dart';
 
 void main() {
   SystemChrome.setSystemUIOverlayStyle(
@@ -23,6 +24,8 @@ class MyApp extends StatelessWidget {
         canvasColor: Colors.black,
         cardColor: Color(0xff212121),
         highlightColor: Color(0xff333333),
+        accentColor: Colors.deepPurpleAccent[200],
+        indicatorColor: Colors.deepPurple[200],
         appBarTheme: AppBarTheme(
           color: Colors.black,
         ),
@@ -43,6 +46,7 @@ class MyApp extends StatelessWidget {
       ),
       routes: {
         "/": (BuildContext context) => HomeRoute(),
+        "/about": (BuildContext context) => AboutRoute(),
       },
     );
   }
