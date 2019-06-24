@@ -48,7 +48,7 @@ class AboutRoute extends StatelessWidget {
         children: skills.map((String skill) {
           return Container(
             padding: EdgeInsets.symmetric(vertical: 2.0, horizontal: 5.0),
-            margin: EdgeInsets.symmetric(vertical: 1.0),
+            margin: EdgeInsets.symmetric(vertical: 1.5),
             decoration: BoxDecoration(
                 color: Theme.of(context).accentColor,
                 borderRadius: BorderRadius.circular(4.0)),
