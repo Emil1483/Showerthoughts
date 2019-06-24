@@ -35,8 +35,9 @@ class ThoughtTile extends StatelessWidget {
                   child: AutoSizeText(
                     thought.thougth,
                     style: style,
-                    maxLines: 4,
+                    maxLines: 5,
                     minFontSize: 16,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
               ),
@@ -71,7 +72,7 @@ class ThoughtTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 144.0,
+      height: 172.0,
       padding: EdgeInsets.symmetric(
         horizontal: 22.0,
         vertical: 12.0,
