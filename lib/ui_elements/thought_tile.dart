@@ -32,14 +32,12 @@ class ThoughtTile extends StatelessWidget {
                     .withOpacity(highlightOpacity),
               )
             : Center(
-                child: SingleChildScrollView(
-                  child: AutoSizeText(
-                    thought.thougth,
-                    style: style,
-                    maxLines: 5,
-                    minFontSize: 17,
-                    overflow: TextOverflow.ellipsis,
-                  ),
+                child: AutoSizeText(
+                  thought.thougth,
+                  style: style,
+                  maxLines: 5,
+                  minFontSize: 18,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
       ),
