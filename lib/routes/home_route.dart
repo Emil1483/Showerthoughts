@@ -39,7 +39,7 @@ class _HomeRouteState extends State<HomeRoute> {
         ),
       );
     }
-    return thoughts;
+    return _thoughts[index];
   }
 
   bool _containesDuplicates() {
