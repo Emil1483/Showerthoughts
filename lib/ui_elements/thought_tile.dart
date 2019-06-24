@@ -16,12 +16,14 @@ class ThoughtTile extends StatelessWidget {
     try {
       return Expanded(
         flex: 1,
-        child: SingleChildScrollView(
-          child: AutoSizeText(
-            thought.thougth,
-            style: style,
-            maxLines: 4,
-            minFontSize: 16,
+        child: Center(
+          child: SingleChildScrollView(
+            child: AutoSizeText(
+              thought.thougth,
+              style: style,
+              maxLines: 4,
+              minFontSize: 16,
+            ),
           ),
         ),
       );
@@ -36,7 +38,8 @@ class ThoughtTile extends StatelessWidget {
           ),
           child: LoadingRect(
             mainColor: Theme.of(context).highlightColor,
-            secColor: Theme.of(context).highlightColor.withOpacity(highlightOpacity),
+            secColor:
+                Theme.of(context).highlightColor.withOpacity(highlightOpacity),
           ),
         ),
       );
@@ -49,7 +52,7 @@ class ThoughtTile extends StatelessWidget {
       return Expanded(
         flex: 0,
         child: Text(
-          "- ${thought.author}",
+          " - ${thought.author}",
           style: style,
         ),
       );
@@ -64,7 +67,8 @@ class ThoughtTile extends StatelessWidget {
           ),
           child: LoadingRect(
             mainColor: Theme.of(context).highlightColor,
-            secColor: Theme.of(context).highlightColor.withOpacity(highlightOpacity),
+            secColor:
+                Theme.of(context).highlightColor.withOpacity(highlightOpacity),
           ),
         ),
       );
@@ -88,7 +92,7 @@ class ThoughtTile extends StatelessWidget {
         color: Theme.of(context).cardColor,
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
           _buildTitle(context),
