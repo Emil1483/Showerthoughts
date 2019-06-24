@@ -13,66 +13,59 @@ class ThoughtTile extends StatelessWidget {
 
   Widget _buildTitle(BuildContext context) {
     TextStyle style = Theme.of(context).textTheme.title;
-    try {
-      return Expanded(
-        flex: 1,
-        child: Center(
-          child: SingleChildScrollView(
-            child: AutoSizeText(
-              thought.thougth,
-              style: style,
-              maxLines: 4,
-              minFontSize: 16,
-            ),
-          ),
+    bool loading = thought == null || thought.thougth == null;
+    return Expanded(
+      flex: 1,
+      child: Container(
+        margin: loading
+            ? EdgeInsets.symmetric(vertical: 16.0)
+            : EdgeInsets.only(bottom: 8.0),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(2.0),
         ),
-      );
-    } catch (_) {
-      return Expanded(
-        flex: 1,
-        child: Container(
-          margin: EdgeInsets.all(8.0),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(2.0),
-            color: Theme.of(context).highlightColor,
-          ),
-          child: LoadingRect(
-            mainColor: Theme.of(context).highlightColor,
-            secColor:
-                Theme.of(context).highlightColor.withOpacity(highlightOpacity),
-          ),
-        ),
-      );
-    }
+        child: loading
+            ? LoadingRect(
+                mainColor: Theme.of(context).highlightColor,
+                secColor: Theme.of(context)
+                    .highlightColor
+                    .withOpacity(highlightOpacity),
+              )
+            : Center(
+                child: SingleChildScrollView(
+                  child: AutoSizeText(
+                    thought.thougth,
+                    style: style,
+                    maxLines: 4,
+                    minFontSize: 16,
+                  ),
+                ),
+              ),
+      ),
+    );
   }
 
   Widget _buildSubtitle(BuildContext context) {
     TextStyle style = Theme.of(context).textTheme.subtitle;
-    try {
-      return Expanded(
-        flex: 0,
-        child: Text(
-          " - ${thought.author}",
-          style: style,
-        ),
-      );
-    } catch (_) {
-      return Expanded(
-        flex: 0,
-        child: Container(
-          height: style.fontSize,
-          width: 102.0,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(2.0),
-          ),
-          child: LoadingRect(
-            mainColor: Theme.of(context).highlightColor,
-            secColor:
-                Theme.of(context).highlightColor.withOpacity(highlightOpacity),
-          ),
-        ),
-      );
-    }
+    bool loading = thought == null || thought.author == null;
+
+    return Container(
+      height: loading ? style.fontSize : null,
+      width: loading ? 102.0 : null,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(2.0),
+      ),
+      child: loading
+          ? LoadingRect(
+              mainColor: Theme.of(context).highlightColor,
+              secColor: Theme.of(context)
+                  .highlightColor
+                  .withOpacity(highlightOpacity),
+            )
+          : Text(
+              "- ${thought.author}",
+              style: style,
+            ),
+    );
   }
 
   @override
@@ -93,10 +86,8 @@ class ThoughtTile extends StatelessWidget {
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
           _buildTitle(context),
-          SizedBox(height: 10.0),
           _buildSubtitle(context),
         ],
       ),
