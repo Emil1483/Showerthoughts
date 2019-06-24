@@ -16,6 +16,8 @@ class _HomeRouteState extends State<HomeRoute> {
   bool _hasError = false;
   List<List<Thougth>> _thoughts = [];
 
+  //TODO: Implement heart functionality
+
   Future<List<Thougth>> _getThoughts(int index) async {
     if (index < _thoughts.length) {
       return _thoughts[index];
