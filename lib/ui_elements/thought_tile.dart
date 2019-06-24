@@ -4,6 +4,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 
 import '../models/thought.dart';
 import './loading_rect.dart';
+import '../routes/detail_route.dart';
 
 class ThoughtTile extends StatelessWidget {
   final Thougth thought;
@@ -71,26 +72,45 @@ class ThoughtTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    BorderRadius borderRadius = BorderRadius.circular(8.0);
     return Container(
       height: 182.0,
-      padding: EdgeInsets.symmetric(
-        horizontal: 22.0,
-        vertical: 12.0,
-      ),
       margin: EdgeInsets.symmetric(
         horizontal: 10.0,
         vertical: 4.0,
       ),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8.0),
+        borderRadius: borderRadius,
         color: Theme.of(context).cardColor,
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          _buildTitle(context),
-          _buildSubtitle(context),
-        ],
+      child: Material(
+        type: MaterialType.transparency,
+        child: InkWell(
+          onTap: thought != null
+              ? () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (BuildContext context) =>
+                          DetailRoute(thought: thought),
+                    ),
+                  );
+                }
+              : null,
+          borderRadius: borderRadius,
+          child: Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: 22.0,
+              vertical: 12.0,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                _buildTitle(context),
+                _buildSubtitle(context),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
