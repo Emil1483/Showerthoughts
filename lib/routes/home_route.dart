@@ -11,6 +11,9 @@ class HomeRoute extends StatefulWidget {
 }
 
 class _HomeRouteState extends State<HomeRoute> {
+  final Duration _tryDelay = Duration(milliseconds: 200);
+  final int _triesBeforeTimeout = 20;
+
   final Api _redditApi = Api();
 
   bool _hasError = false;
@@ -24,8 +27,18 @@ class _HomeRouteState extends State<HomeRoute> {
   Future<List<Thougth>> _getThoughts(int index) async {
     if (index < _thoughts.length) return _thoughts[index];
     _getMore(index + 1);
-    while (index >= _thoughts.length)
-      await Future.delayed(Duration(milliseconds: 200));
+    bool shouldCount = index == _thoughts.length;
+    int count = 0;
+    while (index >= _thoughts.length) {
+      await Future.delayed(_tryDelay);
+      if (shouldCount) {
+        count++;
+        if (count >= _triesBeforeTimeout) {
+          _callError();
+          return null;
+        }
+      }
+    }
 
     return _thoughts[index];
   }
@@ -48,6 +61,7 @@ class _HomeRouteState extends State<HomeRoute> {
   }
 
   void _callError() {
+    _working = false;
     setState(() {
       _hasError = true;
     });
