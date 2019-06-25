@@ -14,20 +14,30 @@ class DetailRoute extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Theme.of(context).cardColor,
       ),
-      body: SingleChildScrollView(
-        child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 32.0, vertical: 64.0),
-          alignment: Alignment.center,
-          child: Column(
-            //crossAxisAlignment: CrossAxisAlignment.center,
-            //mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Text(
-                thought.thougth,
-                style: Theme.of(context).textTheme.display1,
-                textAlign: TextAlign.start,
-              ),
-            ],
+      body: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 48.0, vertical: 28.0),
+        child: SingleChildScrollView(
+          child: Center(
+            child: Column(
+              children: <Widget>[
+                Image.asset("assets/shower.png", scale: 3),
+                Container(
+                  constraints: BoxConstraints.loose(Size(double.infinity, 192)),
+                  child: AutoSizeText(
+                    thought.thougth,
+                    style: Theme.of(context).textTheme.display2,
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                SizedBox(height: 16.0),
+                AutoSizeText(
+                  "- ${thought.author}",
+                  style: Theme.of(context).textTheme.display1,
+                  textAlign: TextAlign.center,
+                  maxLines: 1,
+                ),
+              ],
+            ),
           ),
         ),
       ),
