@@ -16,30 +16,41 @@ class _HomeRouteState extends State<HomeRoute> {
   bool _hasError = false;
   List<List<Thougth>> _thoughts = [];
 
+  int _wantedLen = 0;
+  bool _working = false;
+
   //TODO: Implement heart functionality
 
-  Future<List<Thougth>> _getThoughts(int index, BuildContext context) async {
+  Future<List<Thougth>> _getThoughts(int index) async {
     if (index < _thoughts.length) return _thoughts[index];
+    _getMore(index + 1);
+    while (index >= _thoughts.length)
+      await Future.delayed(Duration(milliseconds: 200));
 
-    final thoughts = await _redditApi.nextThougths();
-    if (thoughts == null) {
-      setState(() {
-        _hasError = true;
-      });
-      return null;
-    }
-    _thoughts.add(thoughts);
-    if (_containesDuplicates()) {
-      print("WARNING: _thoughts containes duplicates");
-      Scaffold.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            "WARNING: _thoughts containes duplicates", //TODO: Remove this when done
-          ),
-        ),
-      );
-    }
     return _thoughts[index];
+  }
+
+  void _getMore(int newLen) async {
+    if (newLen > _wantedLen) _wantedLen = newLen;
+    if (_working) return;
+    _working = true;
+    while (_thoughts.length < _wantedLen) {
+      final List<Thougth> moreThougths = await _redditApi.nextThougths();
+      if (moreThougths == null) {
+        _callError();
+        return;
+      }
+      _thoughts.add(moreThougths);
+      if (_containesDuplicates())
+        print("WARNING: _thoughts containes duplicates");
+    }
+    _working = false;
+  }
+
+  void _callError() {
+    setState(() {
+      _hasError = true;
+    });
   }
 
   bool _containesDuplicates() {
@@ -81,7 +92,7 @@ class _HomeRouteState extends State<HomeRoute> {
             delegate: SliverChildBuilderDelegate(
               (BuildContext context, int index) {
                 return FutureBuilder(
-                  future: _getThoughts(index, context),
+                  future: _getThoughts(index),
                   builder: (context, AsyncSnapshot snapshot) {
                     if (snapshot.connectionState != ConnectionState.done) {
                       return ListView(
