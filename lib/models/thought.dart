@@ -7,6 +7,5 @@ class Thougth {
 
   int get hashCode => thougth.hashCode ^ author.hashCode ^ id.hashCode;
 
-  bool operator ==(other) =>
-      other is Thougth && thougth == other.thougth && author == other.author;
+  bool operator ==(other) => other is Thougth && id == other.id;
 }
