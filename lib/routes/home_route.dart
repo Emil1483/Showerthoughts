@@ -1,4 +1,10 @@
+import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:showerthoughts/routes/about_route.dart';
 
 import '../models/thought.dart';
 import '../ui_elements/thought_tile.dart';
@@ -10,9 +16,9 @@ class HomeRoute extends StatefulWidget {
   _HomeRouteState createState() => _HomeRouteState();
 }
 
-class _HomeRouteState extends State<HomeRoute> {
+class _HomeRouteState extends State<HomeRoute> with WidgetsBindingObserver {
   final Duration _tryDelay = Duration(milliseconds: 200);
-  final int _triesBeforeTimeout = 20;
+  final int _triesBeforeTimeout = 50;
 
   final Api _redditApi = Api();
 
@@ -22,7 +28,56 @@ class _HomeRouteState extends State<HomeRoute> {
   int _wantedLen = 0;
   bool _working = false;
 
-  //TODO: Implement heart functionality
+  List<Thougth> _saved = [];
+  bool _showSaved = false;
+
+  @override
+  initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    //_loadSaved();
+  }
+
+  @override
+  didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    if (state == AppLifecycleState.paused) {
+      _saveData();
+    }
+  }
+
+  @override
+  dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  Future<File> _getFile() async {
+    final Directory dir = await getApplicationDocumentsDirectory();
+    return File("${dir.path}/saved.json");
+  }
+
+  void _loadSaved() async {
+    File file = await _getFile();
+    try {
+      String jsonString = await file.readAsString();
+      Map<String, dynamic> data = json.decode(jsonString);
+      setState(() {
+        _saved = Thougth.listFromJson(data);
+      });
+    } catch (e) {
+      file.writeAsString(json.encode({}));
+    }
+  }
+
+  void _saveData() async {
+    final File file = await _getFile();
+    Map<String, dynamic> data = {};
+    for (Thougth thougth in _saved) {
+      data.addAll(thougth.toJson());
+    }
+    await file.writeAsString(json.encode(data));
+  }
 
   Future<List<Thougth>> _getThoughts(int index) async {
     if (index < _thoughts.length) return _thoughts[index];
@@ -94,53 +149,128 @@ class _HomeRouteState extends State<HomeRoute> {
     });
   }
 
-  @override
-  Widget build(BuildContext context) {
-    Widget afterAppBar = _hasError
+  Widget _buildSavedListTile() {
+    return _showSaved
+        ? ListTile(
+            leading: Icon(Icons.lightbulb_outline),
+            title: Text(
+              "Thoughts",
+              style: Theme.of(context).textTheme.subhead,
+            ),
+            onTap: () {
+              setState(() {
+                _showSaved = false;
+              });
+              Navigator.of(context).pop();
+            },
+          )
+        : ListTile(
+            leading: Icon(Icons.favorite_border),
+            title: Text(
+              "Saved",
+              style: Theme.of(context).textTheme.subhead,
+            ),
+            onTap: () {
+              setState(() {
+                _showSaved = true;
+              });
+              Navigator.of(context).pop();
+            },
+          );
+  }
+
+  Widget _buildDrawer(BuildContext context) {
+    return Drawer(
+      child: Material(
+        color: Theme.of(context).cardColor,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            SizedBox(height: 16.0),
+            Image.asset(
+              "assets/shower.png",
+              scale: 4,
+            ),
+            _buildSavedListTile(),
+            ListTile(
+              leading: Icon(Icons.mail),
+              title: Text(
+                "About me",
+                style: Theme.of(context).textTheme.subhead,
+              ),
+              onTap: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => AboutRoute()),
+                );
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  SliverChildDelegate _buildSliverDelegate(BuildContext context) {
+    return !_showSaved
+        ? SliverChildBuilderDelegate(
+            (BuildContext context, int index) {
+              return FutureBuilder(
+                future: _getThoughts(index),
+                builder: (context, AsyncSnapshot snapshot) {
+                  if (snapshot.connectionState != ConnectionState.done) {
+                    return ListView(
+                      padding: EdgeInsets.all(0),
+                      shrinkWrap: true,
+                      primary: false,
+                      children: List.generate(Api.batchSize, (int index) {
+                        return ThoughtTile(
+                          thought: null,
+                        );
+                      }),
+                    );
+                  } else {
+                    final List<Thougth> data = snapshot.data;
+                    return ListView(
+                      padding: EdgeInsets.all(0),
+                      shrinkWrap: true,
+                      primary: false,
+                      children: data.map(
+                        (Thougth thought) {
+                          return ThoughtTile(
+                            thought: thought,
+                          );
+                        },
+                      ).toList(),
+                    );
+                  }
+                },
+              );
+            },
+          )
+        : SliverChildListDelegate(
+            _saved.map((Thougth thought) {
+              return ThoughtTile(thought: thought);
+            }).toList(),
+          );
+  }
+
+  Widget _buildAfterAppBar(BuildContext context) {
+    return _hasError
         ? SliverFillRemaining(
             child: Error(
               color: Theme.of(context).accentColor,
             ),
           )
         : SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (BuildContext context, int index) {
-                return FutureBuilder(
-                  future: _getThoughts(index),
-                  builder: (context, AsyncSnapshot snapshot) {
-                    if (snapshot.connectionState != ConnectionState.done) {
-                      return ListView(
-                        padding: EdgeInsets.all(0),
-                        shrinkWrap: true,
-                        primary: false,
-                        children: List.generate(Api.batchSize, (int index) {
-                          return ThoughtTile(
-                            thought: null,
-                          );
-                        }),
-                      );
-                    } else {
-                      final List<Thougth> data = snapshot.data;
-                      return ListView(
-                        padding: EdgeInsets.all(0),
-                        shrinkWrap: true,
-                        primary: false,
-                        children: data.map(
-                          (Thougth thought) {
-                            return ThoughtTile(
-                              thought: thought,
-                            );
-                          },
-                        ).toList(),
-                      );
-                    }
-                  },
-                );
-              },
-            ),
+            delegate: _buildSliverDelegate(context),
           );
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
+      drawer: _buildDrawer(context),
       body: RefreshIndicator(
         onRefresh: _onRefresh,
         notificationPredicate: (_) => _hasError,
@@ -155,14 +285,8 @@ class _HomeRouteState extends State<HomeRoute> {
                     ? Theme.of(context).accentColor
                     : Theme.of(context).indicatorColor,
               ),
-              actions: <Widget>[
-                IconButton(
-                  icon: Icon(Icons.info),
-                  onPressed: () => Navigator.pushNamed(context, "/about"),
-                ),
-              ],
             ),
-            afterAppBar,
+            _buildAfterAppBar(context),
           ],
         ),
       ),
