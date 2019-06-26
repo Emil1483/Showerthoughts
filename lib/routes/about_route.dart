@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -52,10 +53,11 @@ class AboutRoute extends StatelessWidget {
             decoration: BoxDecoration(
                 color: Theme.of(context).accentColor,
                 borderRadius: BorderRadius.circular(4.0)),
-            child: Text(
+            child: AutoSizeText(
               skill,
               textAlign: TextAlign.left,
               style: Theme.of(context).textTheme.subhead,
+              maxLines: 1,
             ),
           );
         }).toList(),
