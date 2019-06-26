@@ -16,8 +16,8 @@ class HomeRoute extends StatefulWidget {
 
 class _HomeRouteState extends State<HomeRoute>
     with SingleTickerProviderStateMixin {
-  final Duration _tryDelay = Duration(milliseconds: 200);
-  final int _triesBeforeTimeout = 50;
+  final Duration _tryDelay = Duration(milliseconds: 100);
+  final int _triesBeforeTimeout = 100;
 
   bool _showSaved = false;
   AnimationController _showSavedAnim;
