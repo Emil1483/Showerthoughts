@@ -28,6 +28,14 @@ class MainModel extends Model {
 
   bool get hasError => _hasError;
 
+  void addToSaved(Thougth newThought) {
+    _saved.add(newThought);
+  }
+
+  void removeFromSaved(Thougth newThought) {
+    _saved.remove(newThought);
+  }
+
   void getMore(int newLen) async {
     if (newLen > _wantedLen) _wantedLen = newLen;
     if (_working) return;

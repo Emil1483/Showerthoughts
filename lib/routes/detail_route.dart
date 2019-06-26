@@ -2,14 +2,27 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 
 import '../models/thought.dart';
+import '../scoped_model/main_model.dart';
 
-class DetailRoute extends StatelessWidget {
+class DetailRoute extends StatefulWidget {
   final Thougth thought;
-  final bool favorite;
 
-  DetailRoute({@required this.thought})
-      : assert(thought != null),
-        favorite = false;
+  DetailRoute({@required this.thought}) : assert(thought != null);
+
+  @override
+  _DetailRouteState createState() => _DetailRouteState();
+}
+
+class _DetailRouteState extends State<DetailRoute> {
+  bool favorite;
+
+  _DetailRouteState();
+
+  @override
+  void initState() {
+    super.initState();
+    favorite = MainModel.of(context).saved.contains(widget.thought);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,20 +37,20 @@ class DetailRoute extends StatelessWidget {
             child: Column(
               children: <Widget>[
                 Hero(
-                  tag: thought.id,
+                  tag: widget.thought.id,
                   child: Image.asset("assets/shower.png", scale: 3),
                 ),
                 Container(
                   constraints: BoxConstraints.loose(Size(double.infinity, 192)),
                   child: AutoSizeText(
-                    thought.thougth,
+                    widget.thought.thougth,
                     style: Theme.of(context).textTheme.display2,
                     textAlign: TextAlign.center,
                   ),
                 ),
                 SizedBox(height: 16.0),
                 AutoSizeText(
-                  "- ${thought.author}",
+                  "- ${widget.thought.author}",
                   style: Theme.of(context).textTheme.display1,
                   textAlign: TextAlign.center,
                   maxLines: 1,
@@ -49,7 +62,14 @@ class DetailRoute extends StatelessWidget {
                       icon: favorite
                           ? Icon(Icons.favorite)
                           : Icon(Icons.favorite_border),
-                      onPressed: () {},
+                      onPressed: () {
+                        if (favorite) {
+                          MainModel.of(context).removeFromSaved(widget.thought);
+                        } else {
+                          MainModel.of(context).addToSaved(widget.thought);
+                        }
+                        setState(() => favorite = !favorite);
+                      },
                     ),
                     IconButton(
                       icon: Icon(Icons.share),
