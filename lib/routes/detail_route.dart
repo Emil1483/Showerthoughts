@@ -1,5 +1,6 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:auto_size_text/auto_size_text.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../models/thought.dart';
 import '../scoped_model/main_model.dart';
@@ -77,7 +78,14 @@ class _DetailRouteState extends State<DetailRoute> {
                     ),
                     IconButton(
                       icon: Icon(Icons.open_in_new),
-                      onPressed: () {},
+                      onPressed: () async {
+                        final String modifiedTitle = widget.thought.thougth
+                            .toLowerCase()
+                            .replaceAll(" ", "_");
+                        final String url =
+                            "https://www.reddit.com/r/Showerthoughts/comments/${widget.thought.id}/$modifiedTitle/";
+                        if (await canLaunch(url)) await launch(url);
+                      },
                     ),
                   ],
                 ),

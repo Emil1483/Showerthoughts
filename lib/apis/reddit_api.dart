@@ -64,7 +64,7 @@ class Api {
           Thougth(
             thougth: jsonResponse["data"]["children"][i]["data"]["title"],
             author: jsonResponse["data"]["children"][i]["data"]["author"],
-            id: jsonResponse["data"]["children"][i]["data"]["name"],
+            id: jsonResponse["data"]["children"][i]["data"]["id"],
           ),
         );
       }
