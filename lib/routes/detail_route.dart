@@ -20,7 +20,10 @@ class DetailRoute extends StatelessWidget {
           child: Center(
             child: Column(
               children: <Widget>[
-                Image.asset("assets/shower.png", scale: 3),
+                Hero(
+                  tag: thought.id,
+                  child: Image.asset("assets/shower.png", scale: 3),
+                ),
                 Container(
                   constraints: BoxConstraints.loose(Size(double.infinity, 192)),
                   child: AutoSizeText(

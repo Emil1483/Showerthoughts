@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'package:auto_size_text/auto_size_text.dart';
 
 import '../models/thought.dart';
@@ -70,12 +69,14 @@ class ThoughtTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    BorderRadius borderRadius = BorderRadius.circular(8.0);
+    final BorderRadius borderRadius = BorderRadius.circular(8.0);
+    final double iconSize = 52.0;
     return Container(
       height: 182.0,
-      margin: EdgeInsets.symmetric(
-        horizontal: 10.0,
-        vertical: 4.0,
+      margin: EdgeInsets.only(
+        left: 10.0,
+        right: 10.0,
+        top: 22.0,
       ),
       decoration: BoxDecoration(
         borderRadius: borderRadius,
@@ -95,18 +96,40 @@ class ThoughtTile extends StatelessWidget {
                 }
               : null,
           borderRadius: borderRadius,
-          child: Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: 22.0,
-              vertical: 12.0,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                _buildTitle(context),
-                _buildSubtitle(context),
-              ],
-            ),
+          child: Stack(
+            children: <Widget>[
+              thought != null
+                  ? Transform.translate(
+                      offset: Offset(0, -iconSize / 2),
+                      child: Align(
+                        alignment: Alignment.topCenter,
+                        child: SizedBox(
+                          height: iconSize,
+                          width: iconSize,
+                          child: Hero(
+                            tag: thought.id,
+                            child: Image.asset(
+                              "assets/shower.png",
+                            ),
+                          ),
+                        ),
+                      ),
+                    )
+                  : Container(),
+              Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: 22.0,
+                  vertical: 12.0,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    _buildTitle(context),
+                    _buildSubtitle(context),
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
       ),
