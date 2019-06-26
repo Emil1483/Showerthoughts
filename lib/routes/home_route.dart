@@ -7,17 +7,29 @@ import '../ui_elements/thought_tile.dart';
 import '../apis/reddit_api.dart';
 import '../ui_elements/error.dart';
 import '../scoped_model/main_model.dart';
+import '../ui_elements/transitioner.dart';
 
 class HomeRoute extends StatefulWidget {
   @override
   _HomeRouteState createState() => _HomeRouteState();
 }
 
-class _HomeRouteState extends State<HomeRoute> {
+class _HomeRouteState extends State<HomeRoute>
+    with SingleTickerProviderStateMixin {
   final Duration _tryDelay = Duration(milliseconds: 200);
   final int _triesBeforeTimeout = 50;
 
   bool _showSaved = false;
+  AnimationController _showSavedAnim;
+
+  @override
+  initState() {
+    super.initState();
+    _showSavedAnim = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 300),
+    );
+  }
 
   Future<List<Thougth>> _getThoughts(int index, BuildContext context) async {
     MainModel model = MainModel.of(context);
@@ -45,33 +57,34 @@ class _HomeRouteState extends State<HomeRoute> {
   }
 
   Widget _buildSavedListTile() {
-    return _showSaved
-        ? ListTile(
-            leading: Icon(Icons.lightbulb_outline),
-            title: Text(
-              "Thoughts",
-              style: Theme.of(context).textTheme.subhead,
-            ),
-            onTap: () {
-              setState(() {
-                _showSaved = false;
-              });
-              Navigator.of(context).pop();
-            },
-          )
-        : ListTile(
-            leading: Icon(Icons.favorite_border),
-            title: Text(
-              "Saved",
-              style: Theme.of(context).textTheme.subhead,
-            ),
-            onTap: () {
-              setState(() {
-                _showSaved = true;
-              });
-              Navigator.of(context).pop();
-            },
-          );
+    return ListTile(
+      leading: Transitioner(
+        animation: _showSavedAnim,
+        child1: Icon(Icons.favorite_border),
+        child2: Icon(Icons.lightbulb_outline),
+      ),
+      title: Align(
+        alignment: Alignment.centerLeft,
+        child: Transitioner(
+          animation: _showSavedAnim,
+          child1: Text(
+            "Saved",
+            style: Theme.of(context).textTheme.subhead,
+          ),
+          child2: Text(
+            "Thoughts",
+            style: Theme.of(context).textTheme.subhead,
+          ),
+        ),
+      ),
+      onTap: () {
+        Navigator.of(context).pop();
+        _showSavedAnim.animateTo(_showSaved ? 0.0 : 1.0);
+        setState(() {
+          _showSaved = !_showSaved;
+        });
+      },
+    );
   }
 
   Widget _buildDrawer(BuildContext context) {
