@@ -1,152 +1,47 @@
-import 'dart:async';
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:showerthoughts/routes/about_route.dart';
+import 'package:scoped_model/scoped_model.dart';
 
+import './about_route.dart';
 import '../models/thought.dart';
 import '../ui_elements/thought_tile.dart';
 import '../apis/reddit_api.dart';
 import '../ui_elements/error.dart';
+import '../scoped_model/main_model.dart';
 
 class HomeRoute extends StatefulWidget {
   @override
   _HomeRouteState createState() => _HomeRouteState();
 }
 
-class _HomeRouteState extends State<HomeRoute> with WidgetsBindingObserver {
+class _HomeRouteState extends State<HomeRoute> {
   final Duration _tryDelay = Duration(milliseconds: 200);
   final int _triesBeforeTimeout = 50;
 
-  final Api _redditApi = Api();
-
-  bool _hasError = false;
-  List<List<Thougth>> _thoughts = [];
-
-  int _wantedLen = 0;
-  bool _working = false;
-
-  List<Thougth> _saved = [];
   bool _showSaved = false;
 
-  @override
-  initState() {
-    super.initState();
-    WidgetsBinding.instance.addObserver(this);
-    //_loadSaved();
-  }
+  Future<List<Thougth>> _getThoughts(int index, BuildContext context) async {
+    MainModel model = MainModel.of(context);
+    if (index < model.thoughts.length) return model.thoughts[index];
+    model.getMore(index + 1);
 
-  @override
-  didChangeAppLifecycleState(AppLifecycleState state) {
-    super.didChangeAppLifecycleState(state);
-    if (state == AppLifecycleState.paused) {
-      _saveData();
-    }
-  }
-
-  @override
-  dispose() {
-    WidgetsBinding.instance.removeObserver(this);
-    super.dispose();
-  }
-
-  Future<File> _getFile() async {
-    final Directory dir = await getApplicationDocumentsDirectory();
-    return File("${dir.path}/saved.json");
-  }
-
-  void _loadSaved() async {
-    File file = await _getFile();
-    try {
-      String jsonString = await file.readAsString();
-      Map<String, dynamic> data = json.decode(jsonString);
-      setState(() {
-        _saved = Thougth.listFromJson(data);
-      });
-    } catch (e) {
-      file.writeAsString(json.encode({}));
-    }
-  }
-
-  void _saveData() async {
-    final File file = await _getFile();
-    Map<String, dynamic> data = {};
-    for (Thougth thougth in _saved) {
-      data.addAll(thougth.toJson());
-    }
-    await file.writeAsString(json.encode(data));
-  }
-
-  Future<List<Thougth>> _getThoughts(int index) async {
-    if (index < _thoughts.length) return _thoughts[index];
-    _getMore(index + 1);
-    bool shouldCount = index == _thoughts.length;
+    bool shouldCount = index == model.thoughts.length;
     int count = 0;
-    while (index >= _thoughts.length) {
+    while (index >= model.thoughts.length) {
       await Future.delayed(_tryDelay);
       if (shouldCount) {
         count++;
         if (count >= _triesBeforeTimeout) {
-          _callError();
+          model.callError();
           return null;
         }
       }
     }
 
-    return _thoughts[index];
+    return model.thoughts[index];
   }
 
-  void _getMore(int newLen) async {
-    if (newLen > _wantedLen) _wantedLen = newLen;
-    if (_working) return;
-    _working = true;
-    while (_thoughts.length < _wantedLen) {
-      final List<Thougth> moreThougths = await _redditApi.nextThougths();
-      if (moreThougths == null) {
-        _callError();
-        return;
-      }
-      _thoughts.add(moreThougths);
-      if (_containesDuplicates())
-        print("WARNING: _thoughts containes duplicates");
-    }
-    _working = false;
-  }
-
-  void _callError() {
-    _working = false;
-    setState(() {
-      _hasError = true;
-    });
-  }
-
-  bool _containesDuplicates() {
-    List<Thougth> allThoughts = [];
-    for (List<Thougth> thoughts in _thoughts) {
-      for (Thougth thought in thoughts) {
-        allThoughts.add(thought);
-      }
-    }
-    for (int i = 0; i < allThoughts.length - 1; i++) {
-      Thougth thought1 = allThoughts[i];
-      for (int j = i + 1; j < allThoughts.length; j++) {
-        Thougth thought2 = allThoughts[j];
-        if (thought1 == thought2) {
-          return true;
-        }
-      }
-    }
-    return false;
-  }
-
-  Future _onRefresh() async {
-    final bool shouldTryAgain = await _redditApi.test();
-    if (!shouldTryAgain) return;
-    setState(() {
-      _hasError = false;
-    });
+  Future _onRefresh(BuildContext context) async {
+    MainModel.of(context).testInternet();
   }
 
   Widget _buildSavedListTile() {
@@ -216,7 +111,7 @@ class _HomeRouteState extends State<HomeRoute> with WidgetsBindingObserver {
         ? SliverChildBuilderDelegate(
             (BuildContext context, int index) {
               return FutureBuilder(
-                future: _getThoughts(index),
+                future: _getThoughts(index, context),
                 builder: (context, AsyncSnapshot snapshot) {
                   if (snapshot.connectionState != ConnectionState.done) {
                     return ListView(
@@ -249,14 +144,14 @@ class _HomeRouteState extends State<HomeRoute> with WidgetsBindingObserver {
             },
           )
         : SliverChildListDelegate(
-            _saved.map((Thougth thought) {
+            MainModel.of(context).saved.map((Thougth thought) {
               return ThoughtTile(thought: thought);
             }).toList(),
           );
   }
 
   Widget _buildAfterAppBar(BuildContext context) {
-    return _hasError
+    return MainModel.of(context).hasError
         ? SliverFillRemaining(
             child: Error(
               color: Theme.of(context).accentColor,
@@ -271,24 +166,28 @@ class _HomeRouteState extends State<HomeRoute> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: _buildDrawer(context),
-      body: RefreshIndicator(
-        onRefresh: _onRefresh,
-        notificationPredicate: (_) => _hasError,
-        child: CustomScrollView(
-          slivers: <Widget>[
-            SliverAppBar(
-              expandedHeight: 200.0,
-              floating: true,
-              flexibleSpace: Image.asset(
-                "assets/shower.png",
-                color: _hasError
-                    ? Theme.of(context).accentColor
-                    : Theme.of(context).indicatorColor,
-              ),
+      body: ScopedModelDescendant(
+        builder: (BuildContext context, Widget child, MainModel model) {
+          return RefreshIndicator(
+            onRefresh: () => _onRefresh(context),
+            notificationPredicate: (_) => model.hasError,
+            child: CustomScrollView(
+              slivers: <Widget>[
+                SliverAppBar(
+                  expandedHeight: 200.0,
+                  floating: true,
+                  flexibleSpace: Image.asset(
+                    "assets/shower.png",
+                    color: model.hasError
+                        ? Theme.of(context).accentColor
+                        : Theme.of(context).indicatorColor,
+                  ),
+                ),
+                _buildAfterAppBar(context),
+              ],
             ),
-            _buildAfterAppBar(context),
-          ],
-        ),
+          );
+        },
       ),
     );
   }

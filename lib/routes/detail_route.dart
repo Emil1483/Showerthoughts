@@ -5,8 +5,11 @@ import '../models/thought.dart';
 
 class DetailRoute extends StatelessWidget {
   final Thougth thought;
+  final bool favorite;
 
-  DetailRoute({@required this.thought}) : assert(thought != null);
+  DetailRoute({@required this.thought})
+      : assert(thought != null),
+        favorite = false;
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +41,25 @@ class DetailRoute extends StatelessWidget {
                   style: Theme.of(context).textTheme.display1,
                   textAlign: TextAlign.center,
                   maxLines: 1,
+                ),
+                ButtonBar(
+                  alignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    IconButton(
+                      icon: favorite
+                          ? Icon(Icons.favorite)
+                          : Icon(Icons.favorite_border),
+                      onPressed: () {},
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.share),
+                      onPressed: () {},
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.open_in_new),
+                      onPressed: () {},
+                    ),
+                  ],
                 ),
               ],
             ),
