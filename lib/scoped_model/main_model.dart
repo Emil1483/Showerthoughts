@@ -29,10 +29,12 @@ class MainModel extends Model {
   bool get hasError => _hasError;
 
   void addToSaved(Thougth newThought) {
+    if (_saved.contains(newThought)) return;
     _saved.add(newThought);
   }
 
   void removeFromSaved(Thougth newThought) {
+    if (!_saved.contains(newThought)) return;
     _saved.remove(newThought);
   }
 

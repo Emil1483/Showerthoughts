@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:showerthoughts/scoped_model/main_model.dart';
 
 import '../models/thought.dart';
 import './loading_rect.dart';
@@ -84,52 +85,60 @@ class ThoughtTile extends StatelessWidget {
       ),
       child: Material(
         type: MaterialType.transparency,
-        child: InkWell(
-          onTap: thought != null
-              ? () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (BuildContext context) =>
-                          DetailRoute(thought: thought),
-                    ),
-                  );
-                }
-              : null,
-          borderRadius: borderRadius,
-          child: Stack(
-            children: <Widget>[
-              thought != null
-                  ? Transform.translate(
-                      offset: Offset(0, -iconSize / 2),
-                      child: Align(
-                        alignment: Alignment.topCenter,
-                        child: SizedBox(
-                          height: iconSize,
-                          width: iconSize,
-                          child: Hero(
-                            tag: thought.id,
-                            child: Image.asset(
-                              "assets/shower.png",
+        child: GestureDetector(
+          onLongPressStart: (details) {
+            final RenderBox referenceBox = context.findRenderObject();
+            print(
+                "onLongPress: ${referenceBox.globalToLocal(details.globalPosition)}");
+            MainModel.of(context).addToSaved(thought);
+          },
+          child: InkWell(
+            onTap: thought != null
+                ? () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (BuildContext context) =>
+                            DetailRoute(thought: thought),
+                      ),
+                    );
+                  }
+                : null,
+            borderRadius: borderRadius,
+            child: Stack(
+              children: <Widget>[
+                thought != null
+                    ? Transform.translate(
+                        offset: Offset(0, -iconSize / 2),
+                        child: Align(
+                          alignment: Alignment.topCenter,
+                          child: SizedBox(
+                            height: iconSize,
+                            width: iconSize,
+                            child: Hero(
+                              tag: thought.id,
+                              child: Image.asset(
+                                "assets/shower.png",
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    )
-                  : Container(),
-              Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: 22.0,
-                  vertical: 12.0,
+                      )
+                    : Container(),
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 22.0,
+                    vertical: 12.0,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      _buildTitle(context),
+                      _buildSubtitle(context),
+                    ],
+                  ),
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    _buildTitle(context),
-                    _buildSubtitle(context),
-                  ],
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
