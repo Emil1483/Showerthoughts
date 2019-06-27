@@ -78,30 +78,35 @@ class _ErrorState extends State<Error> with SingleTickerProviderStateMixin {
             },
           ),
           Center(
-            child: Container(
-              color: Theme.of(context).canvasColor,
-              height: 200.0,
-              width: double.infinity,
-              padding: EdgeInsets.symmetric(
-                horizontal: 22.0,
-                vertical: 8.0,
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  AutoSizeText(
-                    "Shower thoughts are down",
-                    style: Theme.of(context).textTheme.headline,
-                    textAlign: TextAlign.center,
-                    maxLines: 2,
+            child: ClipRect(
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 7.0, sigmaY: 7.0),
+                child: Container(
+                  color: Colors.black.withAlpha(50),
+                  height: 200.0,
+                  width: double.infinity,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 22.0,
+                    vertical: 8.0,
                   ),
-                  AutoSizeText(
-                    "Check your internet",
-                    style: Theme.of(context).textTheme.subhead,
-                    textAlign: TextAlign.center,
-                    maxLines: 1,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      AutoSizeText(
+                        "Shower thoughts are down",
+                        style: Theme.of(context).textTheme.headline,
+                        textAlign: TextAlign.center,
+                        maxLines: 2,
+                      ),
+                      AutoSizeText(
+                        "Check your internet",
+                        style: Theme.of(context).textTheme.subhead,
+                        textAlign: TextAlign.center,
+                        maxLines: 1,
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
             ),
           ),
