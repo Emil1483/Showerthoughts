@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 
@@ -95,9 +97,15 @@ class _HomeRouteState extends State<HomeRoute>
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             SizedBox(height: 16.0),
-            Image.asset(
-              "assets/shower.png",
-              scale: 4,
+            Center(
+              child: Image.asset(
+                "assets/shower.png",
+                scale: 3.5,
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.0),
+              child: Divider(),
             ),
             _buildSavedListTile(),
             ListTile(
