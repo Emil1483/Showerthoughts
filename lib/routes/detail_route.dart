@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:share/share.dart';
 
 import '../models/thought.dart';
 import '../scoped_model/main_model.dart';
@@ -74,7 +75,9 @@ class _DetailRouteState extends State<DetailRoute> {
                     ),
                     IconButton(
                       icon: Icon(Icons.share),
-                      onPressed: () {},
+                      onPressed: () {
+                        Share.share(widget.thought.thougth);
+                      },
                     ),
                     IconButton(
                       icon: Icon(Icons.open_in_new),
