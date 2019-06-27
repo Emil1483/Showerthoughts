@@ -11,6 +11,7 @@ import 'package:photos_saver/photos_saver.dart';
 
 import '../models/thought.dart';
 import '../scoped_model/main_model.dart';
+import '../ui_elements/transitioner.dart';
 
 class DetailRoute extends StatefulWidget {
   final Thougth thought;
@@ -21,14 +22,27 @@ class DetailRoute extends StatefulWidget {
   _DetailRouteState createState() => _DetailRouteState();
 }
 
-class _DetailRouteState extends State<DetailRoute> {
+class _DetailRouteState extends State<DetailRoute>
+    with SingleTickerProviderStateMixin {
   final GlobalKey _globalKey = new GlobalKey();
   bool _favorite;
+  AnimationController _controller;
 
   @override
   void initState() {
     super.initState();
     _favorite = MainModel.of(context).saved.contains(widget.thought);
+    _controller = AnimationController(
+      vsync: this,
+      value: _favorite ? 1.0 : 0.0,
+      duration: Duration(milliseconds: 300),
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   void _saveImage() async {
@@ -73,13 +87,17 @@ class _DetailRouteState extends State<DetailRoute> {
     );
   }
 
-  Widget _buildButtonBar() {
+  Widget _buildButtonRow() {
     final double iconSize = 24.0;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: <Widget>[
         IconButton(
-          icon: _favorite ? Icon(Icons.favorite) : Icon(Icons.favorite_border),
+          icon: Transitioner(
+            animation: _controller,
+            child1: Icon(Icons.favorite_border),
+            child2: Icon(Icons.favorite),
+          ),
           iconSize: iconSize,
           onPressed: () {
             if (_favorite) {
@@ -88,6 +106,7 @@ class _DetailRouteState extends State<DetailRoute> {
               MainModel.of(context).addToSaved(widget.thought);
             }
             setState(() => _favorite = !_favorite);
+            _controller.animateTo(_favorite ? 1.0 : 0.0);
           },
         ),
         IconButton(
@@ -130,7 +149,7 @@ class _DetailRouteState extends State<DetailRoute> {
             child: Column(
               children: <Widget>[
                 _buildThoughtColumn(),
-                _buildButtonBar(),
+                _buildButtonRow(),
               ],
             ),
           ),

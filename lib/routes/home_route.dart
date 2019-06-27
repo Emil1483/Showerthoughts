@@ -33,6 +33,12 @@ class _HomeRouteState extends State<HomeRoute>
     );
   }
 
+  @override
+  dispose() {
+    _showSavedAnim.dispose();
+    super.dispose();
+  }
+
   Future<List<Thougth>> _getThoughts(int index, BuildContext context) async {
     MainModel model = MainModel.of(context);
     if (index < model.thoughts.length) return model.thoughts[index];
