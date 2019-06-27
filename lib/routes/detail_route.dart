@@ -27,6 +27,7 @@ class _DetailRouteState extends State<DetailRoute>
   final GlobalKey _globalKey = new GlobalKey();
   bool _favorite;
   AnimationController _controller;
+  bool _downloading = false;
 
   @override
   void initState() {
@@ -46,6 +47,7 @@ class _DetailRouteState extends State<DetailRoute>
   }
 
   void _saveImage() async {
+    setState(() => _downloading = true);
     RenderRepaintBoundary boundary =
         _globalKey.currentContext.findRenderObject();
     ui.Image image = await boundary.toImage();
@@ -53,6 +55,10 @@ class _DetailRouteState extends State<DetailRoute>
     await PhotosSaver.saveFile(
       fileData: byteData.buffer.asUint8List(),
     );
+    await Future.delayed(
+      Duration(milliseconds: 300),
+    );
+    setState(() => _downloading = false);
   }
 
   Widget _buildThoughtColumn() {
@@ -117,7 +123,9 @@ class _DetailRouteState extends State<DetailRoute>
           },
         ),
         IconButton(
-          icon: Icon(Icons.file_download),
+          icon: _downloading
+              ? CircularProgressIndicator()
+              : Icon(Icons.file_download),
           iconSize: iconSize,
           onPressed: _saveImage,
         ),
