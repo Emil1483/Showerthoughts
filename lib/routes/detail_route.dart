@@ -22,8 +22,8 @@ class DetailRoute extends StatefulWidget {
 }
 
 class _DetailRouteState extends State<DetailRoute> {
+  final GlobalKey _globalKey = new GlobalKey();
   bool _favorite;
-  GlobalKey _globalKey = new GlobalKey();
 
   @override
   void initState() {
@@ -44,38 +44,43 @@ class _DetailRouteState extends State<DetailRoute> {
   Widget _buildThoughtColumn() {
     return RepaintBoundary(
       key: _globalKey,
-      child: Column(
-        children: <Widget>[
-          Hero(
-            tag: widget.thought.id,
-            child: Image.asset("assets/shower.png", scale: 3),
-          ),
-          Container(
-            constraints: BoxConstraints.loose(Size(double.infinity, 192)),
-            child: AutoSizeText(
-              widget.thought.thougth,
-              style: Theme.of(context).textTheme.display2,
-              textAlign: TextAlign.center,
+      child: Padding(
+        padding: EdgeInsets.only(bottom: 22.0),
+        child: Column(
+          children: <Widget>[
+            Hero(
+              tag: widget.thought.id,
+              child: Image.asset("assets/shower.png", scale: 3),
             ),
-          ),
-          SizedBox(height: 16.0),
-          AutoSizeText(
-            "- ${widget.thought.author}",
-            style: Theme.of(context).textTheme.display1,
-            textAlign: TextAlign.center,
-            maxLines: 1,
-          ),
-        ],
+            Container(
+              constraints: BoxConstraints.loose(Size(double.infinity, 192)),
+              child: AutoSizeText(
+                widget.thought.thougth,
+                style: Theme.of(context).textTheme.display2,
+                textAlign: TextAlign.center,
+              ),
+            ),
+            SizedBox(height: 16.0),
+            AutoSizeText(
+              "- ${widget.thought.author}",
+              style: Theme.of(context).textTheme.display1,
+              textAlign: TextAlign.center,
+              maxLines: 1,
+            ),
+          ],
+        ),
       ),
     );
   }
 
   Widget _buildButtonBar() {
-    return ButtonBar(
-      alignment: MainAxisAlignment.center,
+    final double iconSize = 24.0;
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: <Widget>[
         IconButton(
           icon: _favorite ? Icon(Icons.favorite) : Icon(Icons.favorite_border),
+          iconSize: iconSize,
           onPressed: () {
             if (_favorite) {
               MainModel.of(context).removeFromSaved(widget.thought);
@@ -87,16 +92,19 @@ class _DetailRouteState extends State<DetailRoute> {
         ),
         IconButton(
           icon: Icon(Icons.share),
+          iconSize: iconSize,
           onPressed: () {
             Share.share(widget.thought.thougth);
           },
         ),
         IconButton(
           icon: Icon(Icons.file_download),
+          iconSize: iconSize,
           onPressed: _saveImage,
         ),
         IconButton(
           icon: Icon(Icons.open_in_new),
+          iconSize: iconSize,
           onPressed: () async {
             final String modifiedTitle =
                 widget.thought.thougth.toLowerCase().replaceAll(" ", "_");
