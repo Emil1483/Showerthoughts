@@ -33,7 +33,7 @@ class AboutRoute extends StatelessWidget {
     Widget body = Padding(
       padding: EdgeInsets.only(bottom: 24.0),
       child: Text(
-        "This app is the 4th app of my portfolio; If you need a flutter developer, send me an email! My portfolio apps are proof that I can:",
+        "This app is the 4th app of my portfolio; If you need a mobile app developer, send me an email! My portfolio apps are proof that I can:",
         style: TextStyle(
           fontSize: 16.0,
           color: Colors.grey.shade400,
@@ -64,13 +64,17 @@ class AboutRoute extends StatelessWidget {
       ),
     );
 
-    Widget text = ListView(
-      padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
-      children: <Widget>[
-        headline,
-        body,
-        bulletPoints,
-      ],
+    Widget text = SingleChildScrollView(
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+        child: Column(
+          children: <Widget>[
+            headline,
+            body,
+            bulletPoints,
+          ],
+        ),
+      ),
     );
 
     Widget fab = FloatingActionButton(

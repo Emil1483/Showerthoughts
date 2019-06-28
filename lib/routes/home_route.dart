@@ -105,9 +105,7 @@ class _HomeRouteState extends State<HomeRoute>
       ),
       onTap: () {
         Navigator.of(context).pop();
-        Navigator.of(context).push(
-          MaterialPageRoute(builder: (context) => AboutRoute()),
-        );
+        Navigator.of(context).pushNamed("/about");
       },
     );
   }
@@ -133,6 +131,23 @@ class _HomeRouteState extends State<HomeRoute>
     );
   }
 
+  Widget _buildTermsListTile() {
+    return ListTile(
+      leading: Image.asset(
+        "assets/terms.png",
+        scale: 22,
+      ),
+      title: Text(
+        "Terms",
+        style: Theme.of(context).textTheme.subhead,
+      ),
+      onTap: () {
+        Navigator.of(context).pop();
+        Navigator.of(context).pushNamed("/terms");
+      },
+    );
+  }
+
   Widget _buildDrawer(BuildContext context) {
     return Drawer(
       child: Material(
@@ -154,6 +169,7 @@ class _HomeRouteState extends State<HomeRoute>
             _buildSavedListTile(),
             _buildAboutListTile(),
             _buildRedditListTile(),
+            _buildTermsListTile(),
           ],
         ),
       ),

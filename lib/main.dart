@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:scoped_model/scoped_model.dart';
+import 'package:showerthoughts/routes/terms_route.dart';
 
 import './routes/home_route.dart';
 import './routes/about_route.dart';
@@ -90,6 +91,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         routes: {
           "/": (BuildContext context) => HomeRoute(),
           "/about": (BuildContext context) => AboutRoute(),
+          "/terms": (BuildContext context) => TermsRoute(),
         },
       ),
     );
