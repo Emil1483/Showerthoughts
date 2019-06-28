@@ -6,9 +6,9 @@ class AboutRoute extends StatelessWidget {
   final List<String> skills = [
     "Use an API",
     "Use git and github",
-    "Build beutiful UI in flutter",
-    "Make unbelievably good animations in flutter",
-    "Handle errors in flutter",
+    "Design and build beutiful UI in flutter",
+    "Create stunning animations in flutter",
+    "Handle errors in flutter (try disabling internet)",
     "Write general purpose code",
     "Use spritewidget to build games",
     "Build simulations based on real physics",
