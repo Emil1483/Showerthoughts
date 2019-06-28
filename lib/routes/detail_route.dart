@@ -153,13 +153,11 @@ class _DetailRouteState extends State<DetailRoute>
       body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 48.0, vertical: 28.0),
-          child: Center(
-            child: Column(
-              children: <Widget>[
-                _buildThoughtColumn(),
-                _buildButtonRow(),
-              ],
-            ),
+          child: Column(
+            children: <Widget>[
+              _buildThoughtColumn(),
+              _buildButtonRow(),
+            ],
           ),
         ),
       ),
