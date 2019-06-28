@@ -5,6 +5,7 @@ import 'package:showerthoughts/scoped_model/main_model.dart';
 import '../models/thought.dart';
 import './loading_rect.dart';
 import '../routes/detail_route.dart';
+import './heart_splash.dart';
 
 class ThoughtTile extends StatelessWidget {
   final Thougth thought;
@@ -70,77 +71,89 @@ class ThoughtTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final BorderRadius borderRadius = BorderRadius.circular(8.0);
     final double iconSize = 52.0;
+    final BorderRadius borderRadius = BorderRadius.circular(8.0);
     return Container(
       height: 182.0,
+      decoration: BoxDecoration(
+        color: Theme.of(context).cardColor,
+        borderRadius: borderRadius,
+      ),
       margin: EdgeInsets.only(
         left: 10.0,
         right: 10.0,
         top: 22.0,
       ),
-      decoration: BoxDecoration(
-        borderRadius: borderRadius,
-        color: Theme.of(context).cardColor,
-      ),
-      child: Material(
-        type: MaterialType.transparency,
-        child: GestureDetector(
-          onLongPressStart: (details) {
-            final RenderBox referenceBox = context.findRenderObject();
-            print(
-                "onLongPress: ${referenceBox.globalToLocal(details.globalPosition)}");
-            MainModel.of(context).addToSaved(thought);
-          },
-          child: InkWell(
-            onTap: thought != null
-                ? () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (BuildContext context) =>
-                            DetailRoute(thought: thought),
-                      ),
-                    );
-                  }
-                : null,
+      child: Stack(
+        children: <Widget>[
+          ClipRRect(
             borderRadius: borderRadius,
-            child: Stack(
-              children: <Widget>[
-                thought != null
-                    ? Transform.translate(
-                        offset: Offset(0, -iconSize / 2),
-                        child: Align(
-                          alignment: Alignment.topCenter,
-                          child: SizedBox(
-                            height: iconSize,
-                            width: iconSize,
-                            child: Hero(
-                              tag: thought.id,
-                              child: Image.asset(
-                                "assets/shower.png",
-                              ),
-                            ),
+            child: Material(
+              type: MaterialType.transparency,
+              child: HeartSplash(
+                color: Colors.red,
+                child: Builder(
+                  builder: (BuildContext context) {
+                    return GestureDetector(
+                      onLongPressStart: (details) {
+                        final RenderBox referenceBox =
+                            context.findRenderObject();
+                        final Offset pos =
+                            referenceBox.globalToLocal(details.globalPosition);
+                        HeartSplash.of(context).animate(pos: pos);
+
+                        MainModel.of(context).addToSaved(thought);
+                      },
+                      child: InkWell(
+                        onTap: thought != null
+                            ? () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (BuildContext context) =>
+                                        DetailRoute(thought: thought),
+                                  ),
+                                );
+                              }
+                            : null,
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 22.0,
+                            vertical: 12.0,
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              _buildTitle(context),
+                              _buildSubtitle(context),
+                            ],
                           ),
                         ),
-                      )
-                    : Container(),
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 22.0,
-                    vertical: 12.0,
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      _buildTitle(context),
-                      _buildSubtitle(context),
-                    ],
-                  ),
+                      ),
+                    );
+                  },
                 ),
-              ],
+              ),
             ),
           ),
-        ),
+          thought != null
+              ? Transform.translate(
+                  offset: Offset(0, -iconSize / 2),
+                  child: Align(
+                    alignment: Alignment.topCenter,
+                    child: SizedBox(
+                      height: iconSize,
+                      width: iconSize,
+                      child: Hero(
+                        tag: thought.id,
+                        child: Image.asset(
+                          "assets/shower.png",
+                        ),
+                      ),
+                    ),
+                  ),
+                )
+              : Container(),
+        ],
       ),
     );
   }
