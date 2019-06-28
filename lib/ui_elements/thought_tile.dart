@@ -101,7 +101,7 @@ class ThoughtTile extends StatelessWidget {
                         final Offset pos =
                             referenceBox.globalToLocal(details.globalPosition);
                         HeartSplash.of(context).animate(pos: pos);
-
+                        Feedback.forLongPress(context);
                         MainModel.of(context).addToSaved(thought);
                       },
                       child: InkWell(
