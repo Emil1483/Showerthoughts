@@ -150,9 +150,9 @@ class _DetailRouteState extends State<DetailRoute>
       appBar: AppBar(
         backgroundColor: Theme.of(context).cardColor,
       ),
-      body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 48.0, vertical: 28.0),
-        child: SingleChildScrollView(
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 48.0, vertical: 28.0),
           child: Center(
             child: Column(
               children: <Widget>[
