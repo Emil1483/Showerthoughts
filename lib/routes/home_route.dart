@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import './about_route.dart';
 import '../models/thought.dart';
@@ -95,6 +96,43 @@ class _HomeRouteState extends State<HomeRoute>
     );
   }
 
+  Widget _buildAboutListTile() {
+    return ListTile(
+      leading: Icon(Icons.mail),
+      title: Text(
+        "About me",
+        style: Theme.of(context).textTheme.subhead,
+      ),
+      onTap: () {
+        Navigator.of(context).pop();
+        Navigator.of(context).push(
+          MaterialPageRoute(builder: (context) => AboutRoute()),
+        );
+      },
+    );
+  }
+
+  Widget _buildRedditListTile() {
+    return ListTile(
+      leading: Image.asset(
+        "assets/reddit.png",
+        scale: 22,
+      ),
+      title: Text(
+        "r/Showerthoughts",
+        style: Theme.of(context).textTheme.subhead,
+      ),
+      onTap: () async {
+        Navigator.of(context).pop();
+        final url = "https://www.reddit.com/r/Showerthoughts/";
+        if (await canLaunch(url))
+          await launch(url);
+        else
+          throw "Could not launch $url";
+      },
+    );
+  }
+
   Widget _buildDrawer(BuildContext context) {
     return Drawer(
       child: Material(
@@ -114,19 +152,8 @@ class _HomeRouteState extends State<HomeRoute>
               child: Divider(),
             ),
             _buildSavedListTile(),
-            ListTile(
-              leading: Icon(Icons.mail),
-              title: Text(
-                "About me",
-                style: Theme.of(context).textTheme.subhead,
-              ),
-              onTap: () {
-                Navigator.of(context).pop();
-                Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => AboutRoute()),
-                );
-              },
-            ),
+            _buildAboutListTile(),
+            _buildRedditListTile(),
           ],
         ),
       ),
