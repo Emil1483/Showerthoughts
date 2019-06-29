@@ -92,6 +92,7 @@ class AboutRoute extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).cardColor,
+        title: Text("About me"),
       ),
       body: text,
       floatingActionButton: fab,
