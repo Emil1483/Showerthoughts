@@ -106,11 +106,6 @@ class _DetailRouteState extends State<DetailRoute>
           ),
           iconSize: iconSize,
           onPressed: () {
-            if (_favorite) {
-              MainModel.of(context).removeFromSaved(widget.thought);
-            } else {
-              MainModel.of(context).addToSaved(widget.thought);
-            }
             setState(() => _favorite = !_favorite);
             _controller.animateTo(_favorite ? 1.0 : 0.0);
           },
@@ -144,20 +139,32 @@ class _DetailRouteState extends State<DetailRoute>
     );
   }
 
+  Future<bool> _onWillPop() async {
+    if (_favorite) {
+      MainModel.of(context).addToSaved(widget.thought);
+    } else {
+      MainModel.of(context).removeFromSaved(widget.thought);
+    }
+    return true;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).cardColor,
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 48.0, vertical: 28.0),
-          child: Column(
-            children: <Widget>[
-              _buildThoughtColumn(),
-              _buildButtonRow(),
-            ],
+    return WillPopScope(
+      onWillPop: _onWillPop,
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Theme.of(context).cardColor,
+        ),
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 48.0, vertical: 28.0),
+            child: Column(
+              children: <Widget>[
+                _buildThoughtColumn(),
+                _buildButtonRow(),
+              ],
+            ),
           ),
         ),
       ),
