@@ -39,7 +39,7 @@ class _HomeRouteState extends State<HomeRoute>
     super.dispose();
   }
 
-  Future<List<Thougth>> _getThoughts(int index, BuildContext context) async {
+  Future<Thougth> _getThoughts(int index, BuildContext context) async {
     MainModel model = MainModel.of(context);
     if (index < model.thoughts.length) return model.thoughts[index];
     model.getMore(index + 1);
@@ -182,32 +182,11 @@ class _HomeRouteState extends State<HomeRoute>
               return FutureBuilder(
                 future: _getThoughts(index, context),
                 builder: (context, AsyncSnapshot snapshot) {
-                  if (snapshot.connectionState != ConnectionState.done) {
-                    return ListView(
-                      padding: EdgeInsets.all(0),
-                      shrinkWrap: true,
-                      primary: false,
-                      children: List.generate(Api.batchSize, (int index) {
-                        return ThoughtTile(
-                          thought: null,
-                        );
-                      }),
-                    );
-                  } else {
-                    final List<Thougth> data = snapshot.data;
-                    return ListView(
-                      padding: EdgeInsets.all(0),
-                      shrinkWrap: true,
-                      primary: false,
-                      children: data.map(
-                        (Thougth thought) {
-                          return ThoughtTile(
-                            thought: thought,
-                          );
-                        },
-                      ).toList(),
-                    );
-                  }
+                  return ThoughtTile(
+                    thought: snapshot.connectionState == ConnectionState.done
+                        ? snapshot.data
+                        : null,
+                  );
                 },
               );
             },

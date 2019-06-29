@@ -22,7 +22,15 @@ class MainModel extends Model {
     _loadSaved();
   }
 
-  List<List<Thougth>> get thoughts => List.from(_thoughts);
+  List<Thougth> get thoughts {
+    List<Thougth> result = [];
+    for (List<Thougth> thoughts in _thoughts) {
+      for (Thougth thougth in thoughts) {
+        result.add(thougth);
+      }
+    }
+    return result;
+  }
 
   List<Thougth> get saved => List.from(_saved);
 
