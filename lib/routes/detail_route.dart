@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:share/share.dart';
+import 'package:firebase_admob/firebase_admob.dart';
 
 import '../models/thought.dart';
 import '../scoped_model/main_model.dart';
@@ -22,6 +22,7 @@ class _DetailRouteState extends State<DetailRoute>
     with SingleTickerProviderStateMixin {
   bool _favorite;
   AnimationController _controller;
+  BannerAd _bannerAd;
 
   @override
   void initState() {
@@ -32,6 +33,22 @@ class _DetailRouteState extends State<DetailRoute>
       value: _favorite ? 1.0 : 0.0,
       duration: Duration(milliseconds: 300),
     );
+    _initAdBanner();
+  }
+
+  void _initAdBanner() async {
+    _bannerAd = BannerAd(
+      adUnitId: BannerAd.testAdUnitId,
+      size: AdSize.banner,
+      targetingInfo: MobileAdTargetingInfo(
+        keywords: ["Reddit", "Quotes"],
+        childDirected: false,
+        designedForFamilies: false,
+        testDevices: <String>[],
+      ),
+    );
+    await _bannerAd.load();
+    await _bannerAd.show(anchorType: AnchorType.bottom);
   }
 
   @override
@@ -109,6 +126,7 @@ class _DetailRouteState extends State<DetailRoute>
   }
 
   Future<bool> _onWillPop() async {
+    _bannerAd.dispose();
     if (_favorite) {
       MainModel.of(context).addToSaved(widget.thought);
     } else {
