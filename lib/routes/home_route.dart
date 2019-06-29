@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import './about_route.dart';
 import '../models/thought.dart';
 import '../ui_elements/thought_tile.dart';
 import '../apis/reddit_api.dart';
@@ -221,7 +220,7 @@ class _HomeRouteState extends State<HomeRoute>
   }
 
   Widget _buildAfterAppBar(BuildContext context) {
-    return MainModel.of(context).hasError
+    return MainModel.of(context).hasError && !_showSaved
         ? SliverFillRemaining(
             child: Error(
               color: Theme.of(context).accentColor,
