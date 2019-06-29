@@ -6,7 +6,6 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../models/thought.dart';
 import '../ui_elements/thought_tile.dart';
-import '../apis/reddit_api.dart';
 import '../ui_elements/error.dart';
 import '../scoped_model/main_model.dart';
 import '../ui_elements/transitioner.dart';
@@ -179,6 +178,12 @@ class _HomeRouteState extends State<HomeRoute>
     return !_showSaved
         ? SliverChildBuilderDelegate(
             (BuildContext context, int index) {
+              final List<Thougth> thoughts = MainModel.of(context).thoughts;
+              if (index < thoughts.length) {
+                return ThoughtTile(
+                  thought: thoughts[index],
+                );
+              }
               return FutureBuilder(
                 future: _getThoughts(index, context),
                 builder: (context, AsyncSnapshot snapshot) {
