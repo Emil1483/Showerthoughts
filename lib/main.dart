@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:scoped_model/scoped_model.dart';
-import 'package:showerthoughts/routes/terms_route.dart';
 
 import './routes/home_route.dart';
 import './routes/about_route.dart';
+import './routes/terms_route.dart';
 import './scoped_model/main_model.dart';
 
 void main() {

@@ -25,7 +25,6 @@ dependencies:
   path_provider: ^1.1.0
   scoped_model: ^1.0.1
   share: ^0.6.1+1
-  image_gallery_saver: ^1.1.0
   photos_saver: ^0.0.2
 
   # The following adds the Cupertino Icons font to your application.
