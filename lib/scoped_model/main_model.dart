@@ -51,10 +51,10 @@ class MainModel extends Model {
       size: AdSize.banner,
       targetingInfo: MobileAdTargetingInfo(
         keywords: [
-          "Reddit",
-          "Quotes",
-          "Djupvik",
-          "Showerthoughts",
+          "reddit",
+          "quotes",
+          "thoughts",
+          "showerthoughts",
         ],
         childDirected: false,
         designedForFamilies: false,
