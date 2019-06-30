@@ -8,6 +8,7 @@ import 'package:firebase_admob/firebase_admob.dart';
 
 import '../models/thought.dart';
 import '../apis/reddit_api.dart';
+import '../advert_ids.dart';
 
 class MainModel extends Model {
   List<List<Thougth>> _thoughts = [];
@@ -47,7 +48,7 @@ class MainModel extends Model {
 
   void _initAdBanner() async {
     _bannerAd = BannerAd(
-      adUnitId: "ca-app-pub-1625083960686206/8251050687",
+      adUnitId: AdvertIds.bannerId,
       size: AdSize.banner,
       targetingInfo: MobileAdTargetingInfo(
         keywords: [

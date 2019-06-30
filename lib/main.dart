@@ -7,10 +7,10 @@ import './routes/home_route.dart';
 import './routes/about_route.dart';
 import './routes/terms_route.dart';
 import './scoped_model/main_model.dart';
+import './advert_ids.dart';
 
 void main() {
-  FirebaseAdMob.instance
-      .initialize(appId: "ca-app-pub-1625083960686206~4886520744");
+  FirebaseAdMob.instance.initialize(appId: AdvertIds.appId);
   SystemChrome.setSystemUIOverlayStyle(
     SystemUiOverlayStyle(
       systemNavigationBarColor: Colors.black,
