@@ -47,7 +47,7 @@ class MainModel extends Model {
 
   void _initAdBanner() async {
     _bannerAd = BannerAd(
-      adUnitId: BannerAd.testAdUnitId,
+      adUnitId: "ca-app-pub-1625083960686206/8251050687",
       size: AdSize.banner,
       targetingInfo: MobileAdTargetingInfo(
         keywords: [
