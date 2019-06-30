@@ -1,0 +1,41 @@
+{
+  "project_info": {
+    "project_number": "419898153211",
+    "firebase_url": "https://shower-thoughts-ad887.firebaseio.com",
+    "project_id": "shower-thoughts-ad887",
+    "storage_bucket": "shower-thoughts-ad887.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:419898153211:android:41307c5ace9624da",
+        "android_client_info": {
+          "package_name": "com.djupvik.showerthoughts"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "419898153211-bpv6dg20m7ura215am2h5vnbeim8muju.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBsilApK4RuXH-mvBLiu0t2M52IBkXHv6U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "419898153211-bpv6dg20m7ura215am2h5vnbeim8muju.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      },
+      "admob_app_id": "ca-app-pub-1625083960686206~4886520744"
+    }
+  ],
+  "configuration_version": "1"
+}
