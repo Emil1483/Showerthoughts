@@ -1,8 +1,10 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:path_provider/path_provider.dart';
-import 'dart:convert';
-import 'dart:io';
+import 'package:firebase_admob/firebase_admob.dart';
 
 import '../models/thought.dart';
 import '../apis/reddit_api.dart';
@@ -18,8 +20,11 @@ class MainModel extends Model {
 
   bool _hasError = false;
 
+  BannerAd _bannerAd;
+
   MainModel() {
     _loadSaved();
+    _initAdBanner();
   }
 
   List<Thougth> get thoughts {
@@ -35,6 +40,25 @@ class MainModel extends Model {
   List<Thougth> get saved => List.from(_saved);
 
   bool get hasError => _hasError;
+
+  void disposeBannerAd() {
+    _bannerAd.dispose();
+  }
+
+  void _initAdBanner() async {
+    _bannerAd = BannerAd(
+      adUnitId: BannerAd.testAdUnitId,
+      size: AdSize.banner,
+      targetingInfo: MobileAdTargetingInfo(
+        keywords: ["Reddit", "Quotes"],
+        childDirected: false,
+        designedForFamilies: false,
+        testDevices: <String>[],
+      ),
+    );
+    await _bannerAd.load();
+    await _bannerAd.show(anchorType: AnchorType.bottom, anchorOffset: 0);
+  }
 
   void addToSaved(Thougth newThought) {
     if (_saved.contains(newThought)) return;

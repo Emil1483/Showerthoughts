@@ -9,7 +9,8 @@ import './routes/terms_route.dart';
 import './scoped_model/main_model.dart';
 
 void main() {
-  FirebaseAdMob.instance.initialize(appId: "ca-app-pub-1625083960686206~4886520744");
+  FirebaseAdMob.instance
+      .initialize(appId: "ca-app-pub-1625083960686206~4886520744");
   SystemChrome.setSystemUIOverlayStyle(
     SystemUiOverlayStyle(
       systemNavigationBarColor: Colors.black,
@@ -44,6 +45,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   @override
   dispose() {
     WidgetsBinding.instance.removeObserver(this);
+    _mainModel.disposeBannerAd();
     super.dispose();
   }
 
