@@ -81,6 +81,11 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
               fontSize: 22.0,
               fontStyle: FontStyle.italic,
             ),
+            button: TextStyle(
+              fontWeight: FontWeight.w300,
+              color: Colors.white,
+              fontSize: 21.0,
+            ),
             subtitle: TextStyle(
               color: Colors.deepPurple[300],
               fontSize: 14.0,

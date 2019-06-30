@@ -49,7 +49,7 @@ class MainModel extends Model {
   void _initAdBanner() async {
     _bannerAd = BannerAd(
       adUnitId: AdvertIds.bannerId,
-      size: AdSize.banner,
+      size: AdSize.smartBanner,
       targetingInfo: MobileAdTargetingInfo(
         keywords: [
           "reddit",

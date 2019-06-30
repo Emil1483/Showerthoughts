@@ -64,7 +64,53 @@ class AboutRoute extends StatelessWidget {
       ),
     );
 
-    Widget text = SingleChildScrollView(
+    Widget button = Padding(
+      padding: EdgeInsets.only(top: 32.0),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(32.0),
+        child: Container(
+          decoration: new BoxDecoration(
+            gradient: new LinearGradient(
+              colors: [
+                Theme.of(context).accentColor,
+                Theme.of(context).indicatorColor,
+              ],
+              begin: FractionalOffset.centerLeft,
+              end: FractionalOffset.centerRight,
+            ),
+          ),
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              highlightColor: Theme.of(context).indicatorColor,
+              onTap: () async {
+                final url = "mailto:emil14833@gmail.com";
+                if (await canLaunch(url))
+                  await launch(url);
+                else
+                  throw "Could not launch $url";
+              },
+              child: Padding(
+                padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 22.0),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Icon(Icons.email),
+                    SizedBox(width: 6.0),
+                    Text(
+                      "Email Me!",
+                      style: Theme.of(context).textTheme.button,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+
+    Widget scaffoldBody = SingleChildScrollView(
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
         child: Column(
@@ -72,22 +118,11 @@ class AboutRoute extends StatelessWidget {
             headline,
             body,
             bulletPoints,
+            button,
             SizedBox(height: 64),
           ],
         ),
       ),
-    );
-
-    Widget fab = FloatingActionButton(
-      backgroundColor: Theme.of(context).accentColor,
-      onPressed: () async {
-        final url = "mailto:emil14833@gmail.com";
-        if (await canLaunch(url))
-          await launch(url);
-        else
-          throw "Could not launch $url";
-      },
-      child: Icon(Icons.mail_outline),
     );
 
     return Scaffold(
@@ -95,9 +130,7 @@ class AboutRoute extends StatelessWidget {
         backgroundColor: Theme.of(context).cardColor,
         title: Text("About me"),
       ),
-      body: text,
-      floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
-      floatingActionButton: fab,
+      body: scaffoldBody,
     );
   }
 }
