@@ -52,14 +52,14 @@ class MainModel extends Model {
       size: AdSize.smartBanner,
       targetingInfo: MobileAdTargetingInfo(
         keywords: [
-          "reddit",
           "quotes",
-          "thoughts",
-          "showerthoughts",
+          "reading",
+          "books",
+          "thinking",
         ],
         childDirected: false,
         designedForFamilies: false,
-        testDevices: <String>[],
+        testDevices: <String>[], //"3C2BACC3B6177D291D421EFA6B1DBCE3"
       ),
     );
     await _bannerAd.load();
