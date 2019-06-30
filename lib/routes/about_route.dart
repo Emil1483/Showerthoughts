@@ -72,6 +72,7 @@ class AboutRoute extends StatelessWidget {
             headline,
             body,
             bulletPoints,
+            SizedBox(height: 64),
           ],
         ),
       ),
@@ -95,6 +96,7 @@ class AboutRoute extends StatelessWidget {
         title: Text("About me"),
       ),
       body: text,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
       floatingActionButton: fab,
     );
   }

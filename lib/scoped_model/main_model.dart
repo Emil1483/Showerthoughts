@@ -50,14 +50,19 @@ class MainModel extends Model {
       adUnitId: BannerAd.testAdUnitId,
       size: AdSize.banner,
       targetingInfo: MobileAdTargetingInfo(
-        keywords: ["Reddit", "Quotes"],
+        keywords: [
+          "Reddit",
+          "Quotes",
+          "Djupvik",
+          "Showerthoughts",
+        ],
         childDirected: false,
         designedForFamilies: false,
         testDevices: <String>[],
       ),
     );
     await _bannerAd.load();
-    await _bannerAd.show(anchorType: AnchorType.bottom, anchorOffset: 0);
+    await _bannerAd.show(anchorType: AnchorType.bottom);
   }
 
   void addToSaved(Thougth newThought) {
