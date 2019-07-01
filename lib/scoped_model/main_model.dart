@@ -73,7 +73,7 @@ class MainModel extends Model {
 
   void _initInterstitialAd() {
     _interstitialAd = InterstitialAd(
-        adUnitId: InterstitialAd.testAdUnitId, //AdvertIds.interstitialId,
+        adUnitId: AdvertIds.interstitialId,
         targetingInfo: _targetingInfo,
         listener: (MobileAdEvent event) {
           if (event == MobileAdEvent.closed) {
