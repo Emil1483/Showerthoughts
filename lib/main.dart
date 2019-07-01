@@ -45,7 +45,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   @override
   dispose() {
     WidgetsBinding.instance.removeObserver(this);
-    _mainModel.disposeBannerAd();
+    _mainModel.disposeAds();
     super.dispose();
   }
 

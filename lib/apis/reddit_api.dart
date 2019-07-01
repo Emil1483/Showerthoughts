@@ -58,6 +58,7 @@ class Api {
 
       final jsonResponse = json.decode(responseBody);
       final int len = jsonResponse["data"]["children"].length;
+      if (len <= 0) return null;
       List<Thougth> result = [];
       for (int i = 0; i < len; i++) {
         result.add(

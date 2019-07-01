@@ -11,21 +11,26 @@ import '../apis/reddit_api.dart';
 import '../advert_ids.dart';
 
 class MainModel extends Model {
+  final Api _redditApi = Api();
+  final int _numBeforeInterstitial = 5;
+
   List<List<Thougth>> _thoughts = [];
   List<Thougth> _saved = [];
 
   int _wantedLen = 0;
   bool _working = false;
 
-  final Api _redditApi = Api();
-
   bool _hasError = false;
 
   BannerAd _bannerAd;
+  InterstitialAd _interstitialAd;
+  MobileAdTargetingInfo _targetingInfo;
 
   MainModel() {
     _loadSaved();
+    _initTargetingInfo();
     _initAdBanner();
+    _initInterstitialAd();
   }
 
   List<Thougth> get thoughts {
@@ -42,28 +47,53 @@ class MainModel extends Model {
 
   bool get hasError => _hasError;
 
-  void disposeBannerAd() {
-    _bannerAd.dispose();
+  void _initTargetingInfo() {
+    _targetingInfo = MobileAdTargetingInfo(
+      keywords: [
+        "quotes",
+        "reading",
+        "books",
+        "thinking",
+      ],
+      childDirected: false,
+      designedForFamilies: false,
+      testDevices: <String>["3C2BACC3B6177D291D421EFA6B1DBCE3"],
+    );
   }
 
   void _initAdBanner() async {
     _bannerAd = BannerAd(
       adUnitId: AdvertIds.bannerId,
       size: AdSize.smartBanner,
-      targetingInfo: MobileAdTargetingInfo(
-        keywords: [
-          "quotes",
-          "reading",
-          "books",
-          "thinking",
-        ],
-        childDirected: false,
-        designedForFamilies: false,
-        testDevices: <String>["3C2BACC3B6177D291D421EFA6B1DBCE3"],
-      ),
+      targetingInfo: _targetingInfo,
     );
     await _bannerAd.load();
     await _bannerAd.show(anchorType: AnchorType.bottom);
+  }
+
+  void _initInterstitialAd() {
+    _interstitialAd = InterstitialAd(
+        adUnitId: InterstitialAd.testAdUnitId, //AdvertIds.interstitialId,
+        targetingInfo: _targetingInfo,
+        listener: (MobileAdEvent event) {
+          if (event == MobileAdEvent.closed) {
+            _initInterstitialAd();
+          }
+        });
+  }
+
+  int _interstitialCount = 0;
+  void showInterstitialAdSometimes() async {
+    _interstitialCount++;
+    if (_interstitialCount < _numBeforeInterstitial) return;
+    _interstitialCount = 0;
+    await _interstitialAd.load();
+    await _interstitialAd.show();
+  }
+
+  void disposeAds() {
+    _bannerAd.dispose();
+    _interstitialAd.dispose();
   }
 
   void addToSaved(Thougth newThought) {

@@ -3,7 +3,6 @@ import 'package:flutter/rendering.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:share/share.dart';
-import 'package:firebase_admob/firebase_admob.dart';
 
 import '../models/thought.dart';
 import '../scoped_model/main_model.dart';

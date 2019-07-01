@@ -107,6 +107,8 @@ class ThoughtTile extends StatelessWidget {
                       child: InkWell(
                         onTap: thought != null
                             ? () {
+                                MainModel.of(context)
+                                    .showInterstitialAdSometimes();
                                 Navigator.of(context).push(
                                   MaterialPageRoute(
                                     builder: (BuildContext context) =>
