@@ -148,33 +148,36 @@ class _HomeRouteState extends State<HomeRoute>
   }
 
   Widget _buildAdsButton() {
-    if (!MainModel.of(context).purchaseAvailable ||
-        MainModel.of(context).purchases) return Container();
-    return Center(
-      child: GradientButton(
-        onPressed: () {
-          MainModel.of(context).purchase();
-        },
-        gradient: LinearGradient(
-          colors: [
-            Theme.of(context).accentColor,
-            Theme.of(context).indicatorColor,
-          ],
-          begin: FractionalOffset.centerLeft,
-          end: FractionalOffset.centerRight,
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            Icon(Icons.block),
-            SizedBox(width: 6.0),
-            Text(
-              "Remove Ads",
-              style: Theme.of(context).textTheme.button,
+    return ScopedModelDescendant(
+      builder: (BuildContext context, Widget child, MainModel model) {
+        if (!model.purchaseAvailable || model.purchases) return Container();
+        return Center(
+          child: GradientButton(
+            onPressed: () {
+              MainModel.of(context).purchase(context);
+            },
+            gradient: LinearGradient(
+              colors: [
+                Theme.of(context).accentColor,
+                Theme.of(context).indicatorColor,
+              ],
+              begin: FractionalOffset.centerLeft,
+              end: FractionalOffset.centerRight,
             ),
-          ],
-        ),
-      ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Icon(Icons.block),
+                SizedBox(width: 6.0),
+                Text(
+                  "Remove Ads",
+                  style: Theme.of(context).textTheme.button,
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 

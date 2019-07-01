@@ -6,6 +6,7 @@ import 'package:scoped_model/scoped_model.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:firebase_admob/firebase_admob.dart';
 import 'package:flutter_inapp_purchase/flutter_inapp_purchase.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/thought.dart';
 import '../apis/reddit_api.dart';
@@ -15,7 +16,7 @@ class MainModel extends Model {
   final Api _redditApi = Api();
   final int _numBeforeInterstitial = 5;
 
-  static const String iapId = "android.test.purchased";
+  static const String iapId = "remove_ads";
   List<IAPItem> _items = [];
   bool _available = false;
   bool _purchased = false;
@@ -36,8 +37,8 @@ class MainModel extends Model {
     _loadSaved();
     _initPurchase().then((_) {
       if (_purchased) return;
-      _initAdBanner();
       _initTargetingInfo();
+      _initAdBanner();
       _initInterstitialAd();
     });
   }
@@ -65,13 +66,14 @@ class MainModel extends Model {
       await FlutterInappPurchase.initConnection;
       await _getItems();
       await FlutterInappPurchase.consumeAllItems;
-      var availablePurchases =
-          await FlutterInappPurchase.getAvailablePurchases();
-      if (availablePurchases.length == 0) _purchased = true;
+      var purchaseHistory = await FlutterInappPurchase.getPurchaseHistory();
+      if (purchaseHistory.length > 0) _purchased = true;
       _available = true;
     } catch (_) {
       _available = false;
     }
+    notifyListeners();
+    print("_purchased: $_purchased, _available: $_available");
   }
 
   Future _getItems() async {
@@ -79,10 +81,17 @@ class MainModel extends Model {
     _items.addAll(items);
   }
 
-  void purchase() async {
+  void purchase(BuildContext context) async {
     if (!_available || _purchased) return;
     try {
-      await FlutterInappPurchase.buyProduct(_items[0].productId);
+      PurchasedItem result = await FlutterInappPurchase.buyProduct(
+        _items[0].productId,
+      );
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setString('purchaseToken', result.purchaseToken);
+      _purchased = true;
+      _disposeAds();
+      notifyListeners();
     } catch (error) {
       print("error: $error");
     }
@@ -134,9 +143,15 @@ class MainModel extends Model {
   }
 
   void dispose() {
-    _bannerAd.dispose();
-    _interstitialAd.dispose();
+    _disposeAds();
     FlutterInappPurchase.endConnection;
+  }
+
+  void _disposeAds() {
+    try {
+      _bannerAd.dispose();
+      _interstitialAd.dispose();
+    } catch (_) {}
   }
 
   void addToSaved(Thougth newThought) {
