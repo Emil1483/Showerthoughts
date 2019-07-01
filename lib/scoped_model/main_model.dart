@@ -17,7 +17,7 @@ class MainModel extends Model {
 
   static const String iapId = "android.test.purchased";
   List<IAPItem> _items = [];
-  bool _available;
+  bool _available = false;
   bool _purchased = false;
 
   List<List<Thougth>> _thoughts = [];
