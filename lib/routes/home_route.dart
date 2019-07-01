@@ -150,25 +150,28 @@ class _HomeRouteState extends State<HomeRoute>
     return Drawer(
       child: Material(
         color: Theme.of(context).cardColor,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            SizedBox(height: 16.0),
-            Center(
-              child: Image.asset(
-                "assets/shower.png",
-                scale: 3.5,
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              SizedBox(height: 16.0),
+              Center(
+                child: Image.asset(
+                  "assets/shower.png",
+                  scale: 3.5,
+                ),
               ),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.0),
-              child: Divider(),
-            ),
-            _buildSavedListTile(),
-            _buildRedditListTile(),
-            _buildAboutListTile(),
-            _buildTermsListTile(),
-          ],
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16.0),
+                child: Divider(),
+              ),
+              _buildSavedListTile(),
+              _buildRedditListTile(),
+              _buildAboutListTile(),
+              _buildTermsListTile(),
+              SizedBox(height: 75.0),
+            ],
+          ),
         ),
       ),
     );
@@ -198,8 +201,11 @@ class _HomeRouteState extends State<HomeRoute>
           )
         : SliverChildListDelegate(
             MainModel.of(context).saved.map((Thougth thought) {
-              return ThoughtTile(thought: thought);
-            }).toList(),
+              return Container(
+                child: ThoughtTile(thought: thought),
+              );
+            }).toList()
+              ..add(Container(height: 75.0)),
           );
   }
 

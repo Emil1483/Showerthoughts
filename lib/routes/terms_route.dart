@@ -10,7 +10,12 @@ class TermsRoute extends StatelessWidget {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 32.0, vertical: 24.0),
+          padding: EdgeInsets.only(
+            left: 32.0,
+            right: 32.0,
+            top: 24.0,
+            bottom: 75.0,
+          ),
           child: Text(
             """
 The content held within this app is pulled from reddit.com/r/showerthoughts.

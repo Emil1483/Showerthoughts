@@ -119,7 +119,7 @@ class AboutRoute extends StatelessWidget {
             body,
             bulletPoints,
             button,
-            SizedBox(height: 64),
+            SizedBox(height: 75.0),
           ],
         ),
       ),

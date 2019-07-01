@@ -132,7 +132,7 @@ class _DetailRouteState extends State<DetailRoute>
               children: <Widget>[
                 _buildThoughtColumn(),
                 _buildButtonRow(),
-                SizedBox(height: 42.0),
+                SizedBox(height: 75.0),
               ],
             ),
           ),
