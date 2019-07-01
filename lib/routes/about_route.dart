@@ -2,6 +2,8 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../ui_elements/gradient button.dart';
+
 class AboutRoute extends StatelessWidget {
   final List<String> skills = [
     "Use an API",
@@ -66,46 +68,32 @@ class AboutRoute extends StatelessWidget {
 
     Widget button = Padding(
       padding: EdgeInsets.only(top: 32.0),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(32.0),
-        child: Container(
-          decoration: new BoxDecoration(
-            gradient: new LinearGradient(
-              colors: [
-                Theme.of(context).accentColor,
-                Theme.of(context).indicatorColor,
-              ],
-              begin: FractionalOffset.centerLeft,
-              end: FractionalOffset.centerRight,
+      child: GradientButton(
+        onPressed: () async {
+          final url = "mailto:emil14833@gmail.com";
+          if (await canLaunch(url))
+            await launch(url);
+          else
+            throw "Could not launch $url";
+        },
+        gradient: LinearGradient(
+          colors: [
+            Theme.of(context).accentColor,
+            Theme.of(context).indicatorColor,
+          ],
+          begin: FractionalOffset.centerLeft,
+          end: FractionalOffset.centerRight,
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Icon(Icons.email),
+            SizedBox(width: 6.0),
+            Text(
+              "Email Me!",
+              style: Theme.of(context).textTheme.button,
             ),
-          ),
-          child: Material(
-            color: Colors.transparent,
-            child: InkWell(
-              highlightColor: Theme.of(context).indicatorColor,
-              onTap: () async {
-                final url = "mailto:emil14833@gmail.com";
-                if (await canLaunch(url))
-                  await launch(url);
-                else
-                  throw "Could not launch $url";
-              },
-              child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 22.0),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Icon(Icons.email),
-                    SizedBox(width: 6.0),
-                    Text(
-                      "Email Me!",
-                      style: Theme.of(context).textTheme.button,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
+          ],
         ),
       ),
     );
