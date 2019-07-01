@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:showerthoughts/scoped_model/main_model.dart';
 
+import '../scoped_model/main_model.dart';
 import '../models/thought.dart';
 import './loading_rect.dart';
 import '../routes/detail_route.dart';
