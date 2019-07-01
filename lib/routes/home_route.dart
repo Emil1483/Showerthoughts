@@ -148,9 +148,13 @@ class _HomeRouteState extends State<HomeRoute>
   }
 
   Widget _buildAdsButton() {
+    if (!MainModel.of(context).purchaseAvailable ||
+        MainModel.of(context).purchases) return Container();
     return Center(
       child: GradientButton(
-        onPressed: () {},
+        onPressed: () {
+          MainModel.of(context).purchase();
+        },
         gradient: LinearGradient(
           colors: [
             Theme.of(context).accentColor,
@@ -199,7 +203,7 @@ class _HomeRouteState extends State<HomeRoute>
               _buildTermsListTile(),
               SizedBox(height: 42.0),
               _buildAdsButton(),
-              SizedBox(height: 75.0),
+              SizedBox(height: 105.0),
             ],
           ),
         ),

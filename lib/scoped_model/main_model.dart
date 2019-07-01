@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:firebase_admob/firebase_admob.dart';
+import 'package:flutter_inapp_purchase/flutter_inapp_purchase.dart';
 
 import '../models/thought.dart';
 import '../apis/reddit_api.dart';
@@ -13,6 +14,11 @@ import '../advert_ids.dart';
 class MainModel extends Model {
   final Api _redditApi = Api();
   final int _numBeforeInterstitial = 5;
+
+  static const String iapId = "android.test.purchased";
+  List<IAPItem> _items = [];
+  bool _available;
+  bool _purchased = false;
 
   List<List<Thougth>> _thoughts = [];
   List<Thougth> _saved = [];
@@ -28,9 +34,12 @@ class MainModel extends Model {
 
   MainModel() {
     _loadSaved();
-    _initTargetingInfo();
-    _initAdBanner();
-    _initInterstitialAd();
+    _initPurchase().then((_) {
+      if (_purchased) return;
+      _initAdBanner();
+      _initTargetingInfo();
+      _initInterstitialAd();
+    });
   }
 
   List<Thougth> get thoughts {
@@ -47,6 +56,38 @@ class MainModel extends Model {
 
   bool get hasError => _hasError;
 
+  bool get purchaseAvailable => _available;
+
+  bool get purchases => _purchased;
+
+  Future _initPurchase() async {
+    try {
+      await FlutterInappPurchase.initConnection;
+      await _getItems();
+      await FlutterInappPurchase.consumeAllItems;
+      var availablePurchases =
+          await FlutterInappPurchase.getAvailablePurchases();
+      if (availablePurchases.length == 0) _purchased = true;
+      _available = true;
+    } catch (_) {
+      _available = false;
+    }
+  }
+
+  Future _getItems() async {
+    List<IAPItem> items = await FlutterInappPurchase.getProducts([iapId]);
+    _items.addAll(items);
+  }
+
+  void purchase() async {
+    if (!_available || _purchased) return;
+    try {
+      await FlutterInappPurchase.buyProduct(_items[0].productId);
+    } catch (error) {
+      print("error: $error");
+    }
+  }
+
   void _initTargetingInfo() {
     _targetingInfo = MobileAdTargetingInfo(
       keywords: [
@@ -61,7 +102,7 @@ class MainModel extends Model {
     );
   }
 
-  void _initAdBanner() async {
+  Future _initAdBanner() async {
     _bannerAd = BannerAd(
       adUnitId: AdvertIds.bannerId,
       size: AdSize.smartBanner,
@@ -84,6 +125,7 @@ class MainModel extends Model {
 
   int _interstitialCount = 0;
   void showInterstitialAdSometimes() async {
+    if (_purchased) return;
     _interstitialCount++;
     if (_interstitialCount < _numBeforeInterstitial) return;
     _interstitialCount = 0;
@@ -91,9 +133,10 @@ class MainModel extends Model {
     await _interstitialAd.show();
   }
 
-  void disposeAds() {
+  void dispose() {
     _bannerAd.dispose();
     _interstitialAd.dispose();
+    FlutterInappPurchase.endConnection;
   }
 
   void addToSaved(Thougth newThought) {
