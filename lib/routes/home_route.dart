@@ -9,6 +9,7 @@ import '../ui_elements/thought_tile.dart';
 import '../ui_elements/error.dart';
 import '../scoped_model/main_model.dart';
 import '../ui_elements/transitioner.dart';
+import '../ui_elements/gradient button.dart';
 
 class HomeRoute extends StatefulWidget {
   @override
@@ -146,6 +147,33 @@ class _HomeRouteState extends State<HomeRoute>
     );
   }
 
+  Widget _buildAdsButton() {
+    return Center(
+      child: GradientButton(
+        onPressed: () {},
+        gradient: LinearGradient(
+          colors: [
+            Theme.of(context).accentColor,
+            Theme.of(context).indicatorColor,
+          ],
+          begin: FractionalOffset.centerLeft,
+          end: FractionalOffset.centerRight,
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Icon(Icons.block),
+            SizedBox(width: 6.0),
+            Text(
+              "Remove Ads",
+              style: Theme.of(context).textTheme.button,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildDrawer(BuildContext context) {
     return Drawer(
       child: Material(
@@ -169,6 +197,8 @@ class _HomeRouteState extends State<HomeRoute>
               _buildRedditListTile(),
               _buildAboutListTile(),
               _buildTermsListTile(),
+              SizedBox(height: 42.0),
+              _buildAdsButton(),
               SizedBox(height: 75.0),
             ],
           ),
@@ -205,7 +235,7 @@ class _HomeRouteState extends State<HomeRoute>
                 child: ThoughtTile(thought: thought),
               );
             }).toList()
-              ..add(Container(height: 75.0)),
+              ..add(Container(height: 105.0)),
           );
   }
 
