@@ -65,9 +65,13 @@ class MainModel extends Model {
     try {
       await FlutterInappPurchase.initConnection;
       await _getItems();
-      await FlutterInappPurchase.consumeAllItems;
-      var purchaseHistory = await FlutterInappPurchase.getPurchaseHistory();
-      if (purchaseHistory.length > 0) _purchased = true;
+
+      //When developing for iOS, please check https://stackoverflow.com/questions/54911966/flutter-how-to-check-that-autorenewal-subscription-is-still-valid
+
+      var purchases = await FlutterInappPurchase.getAvailablePurchases();
+      for (var purchase in purchases) {
+        if (purchase.productId == iapId) _purchased = true;
+      }
       _available = true;
     } catch (_) {
       _available = false;
@@ -90,8 +94,8 @@ class MainModel extends Model {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setString('purchaseToken', result.purchaseToken);
       _purchased = true;
-      _disposeAds();
       notifyListeners();
+      _disposeAds();
     } catch (error) {
       print("error: $error");
     }
@@ -150,8 +154,7 @@ class MainModel extends Model {
   void _disposeAds() {
     try {
       _bannerAd.dispose();
-      _interstitialAd.dispose();
-    } catch (_) {}
+    } on Exception {}
   }
 
   void addToSaved(Thougth newThought) {
