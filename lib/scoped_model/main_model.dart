@@ -92,7 +92,7 @@ class MainModel extends Model {
       thougth.hashCode,
       thougth.thougth,
       "- ${thougth.author}",
-      DateTime.now()..add(Duration(days: 1)),
+      DateTime.now().add(Duration(days: 1)),
       platform,
       payload: thougth.toString(),
     );
