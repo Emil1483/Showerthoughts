@@ -6,6 +6,7 @@ import '../ui_elements/gradient button.dart';
 
 class AboutRoute extends StatelessWidget {
   final List<String> skills = [
+    "Add local notifications"
     "Use an API",
     "Use git and github",
     "Design and build beutiful UI in flutter",
