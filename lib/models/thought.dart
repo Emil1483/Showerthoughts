@@ -5,6 +5,30 @@ class Thougth {
 
   Thougth({this.author, this.thougth, this.id});
 
+  factory Thougth.fromString(String str) {
+    List<String> parts = str.split("|||");
+    return Thougth(
+      thougth: parts[0],
+      author: parts[1],
+      id: parts[2],
+    );
+  }
+
+  String toString() {
+    Thougth t = trimmed();
+    return "${t.thougth}|||${t.author}|||${t.id}";
+  }
+
+  static String trim(String str) => str.replaceAll("|", "");
+
+  Thougth trimmed() {
+    return Thougth(
+      thougth: trim(thougth),
+      author: trim(author),
+      id: trim(id),
+    );
+  }
+
   int get hashCode => id.hashCode;
 
   bool operator ==(other) => other is Thougth && id == other.id;

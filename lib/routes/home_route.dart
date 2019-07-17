@@ -32,6 +32,19 @@ class _HomeRouteState extends State<HomeRoute>
       vsync: this,
       duration: Duration(milliseconds: 300),
     );
+    MainModel.of(context).initializeNotifications(
+      onTappedNotification: (String payload) async {
+        await Future.delayed(Duration(milliseconds: 600));
+        Thougth thought = Thougth.fromString(payload);
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (BuildContext context) => DetailRoute(
+              thought: thought,
+            ),
+          ),
+        );
+      },
+    );
   }
 
   @override

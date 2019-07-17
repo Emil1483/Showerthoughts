@@ -38,7 +38,6 @@ class MainModel extends Model {
 
   MainModel() {
     _loadSaved();
-    _initializeNotifications();
     _initPurchase().then((_) {
       if (_purchased) return;
       _initTargetingInfo();
@@ -47,10 +46,12 @@ class MainModel extends Model {
     });
   }
 
-  void _initializeNotifications() {
+  void initializeNotifications({Function(String) onTappedNotification}) async {
     _flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
-    Future onSelectNotification(String payload) async {}
+    Future onSelectNotification(String payload) async {
+      if (onTappedNotification != null) onTappedNotification(payload);
+    }
 
     Future onDidReceiveLocalNotification(
         int a, String b, String c, String d) async {}
@@ -69,9 +70,14 @@ class MainModel extends Model {
     );
   }
 
+  void cancelAllNotifications() async {
+    await _flutterLocalNotificationsPlugin.cancelAll();
+  }
+
   void scheduleNotification() async {
     Thougth thougth = await _redditApi.notificationThought();
     if (thougth == null) return;
+    await _flutterLocalNotificationsPlugin.cancelAll();
     final android = AndroidNotificationDetails(
       'your other channel id',
       'your other channel name',
@@ -86,9 +92,9 @@ class MainModel extends Model {
       thougth.hashCode,
       thougth.thougth,
       "- ${thougth.author}",
-      DateTime.now()..add(Duration(days: 1)),
+      DateTime.now()..add(Duration(seconds: 1)),
       platform,
-      payload: "",
+      payload: thougth.toString(),
     );
   }
 

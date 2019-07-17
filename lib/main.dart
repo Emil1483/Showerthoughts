@@ -40,6 +40,8 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     if (state == AppLifecycleState.paused) {
       _mainModel.saveData();
       _mainModel.scheduleNotification();
+    } else if (state == AppLifecycleState.resumed) {
+      _mainModel.cancelAllNotifications();
     }
   }
 
