@@ -41,8 +41,8 @@ class MainModel extends Model {
     _initPurchase().then((_) {
       if (_purchased) return;
       _initTargetingInfo();
-      //_initAdBanner();
-      //_initInterstitialAd();
+      _initAdBanner();
+      _initInterstitialAd();
     });
   }
 
