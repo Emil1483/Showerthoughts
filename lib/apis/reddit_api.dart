@@ -39,6 +39,32 @@ class Api {
     }
   }
 
+  Future<Thougth> notificationThought() async {
+    try {
+      final Uri uri = Uri.parse(
+          "https://www.reddit.com/r/Showerthoughts/best.json?&after=$_lastPost");
+      final httpRequest = await _httpClient.getUrl(uri);
+
+      final httpResponse = await httpRequest.close();
+      if (httpResponse.statusCode != HttpStatus.ok) {
+        return null;
+      }
+
+      final responseBody = await httpResponse.transform(utf8.decoder).join();
+
+      final jsonResponse = json.decode(responseBody);
+
+      return Thougth(
+        thougth: jsonResponse["data"]["children"][0]["data"]["title"],
+        author: jsonResponse["data"]["children"][0]["data"]["author"],
+        id: jsonResponse["data"]["children"][0]["data"]["id"],
+      );
+    } on Exception catch (e) {
+      print("Error: $e");
+      return null;
+    }
+  }
+
   Future<List<Thougth>> nextThougths() async {
     _workingID++;
     int thisId = _workingID;

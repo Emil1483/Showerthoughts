@@ -39,6 +39,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     super.didChangeAppLifecycleState(state);
     if (state == AppLifecycleState.paused) {
       _mainModel.saveData();
+      _mainModel.scheduleNotification();
     }
   }
 

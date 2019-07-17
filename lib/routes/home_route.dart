@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
+import 'package:showerthoughts/routes/detail_route.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../models/thought.dart';

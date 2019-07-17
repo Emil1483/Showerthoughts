@@ -7,6 +7,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:firebase_admob/firebase_admob.dart';
 import 'package:flutter_inapp_purchase/flutter_inapp_purchase.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 import '../models/thought.dart';
 import '../apis/reddit_api.dart';
@@ -33,14 +34,62 @@ class MainModel extends Model {
   InterstitialAd _interstitialAd;
   MobileAdTargetingInfo _targetingInfo;
 
+  FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin;
+
   MainModel() {
     _loadSaved();
+    _initializeNotifications();
     _initPurchase().then((_) {
       if (_purchased) return;
       _initTargetingInfo();
       //_initAdBanner();
       //_initInterstitialAd();
     });
+  }
+
+  void _initializeNotifications() {
+    _flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+
+    Future onSelectNotification(String payload) async {}
+
+    Future onDidReceiveLocalNotification(
+        int a, String b, String c, String d) async {}
+
+    var init = InitializationSettings(
+      AndroidInitializationSettings(
+        'app_icon',
+      ),
+      IOSInitializationSettings(
+        onDidReceiveLocalNotification: onDidReceiveLocalNotification,
+      ),
+    );
+    _flutterLocalNotificationsPlugin.initialize(
+      init,
+      onSelectNotification: onSelectNotification,
+    );
+  }
+
+  void scheduleNotification() async {
+    Thougth thougth = await _redditApi.notificationThought();
+    if (thougth == null) return;
+    final android = AndroidNotificationDetails(
+      'your other channel id',
+      'your other channel name',
+      'your other channel description',
+    );
+    final iOS = IOSNotificationDetails();
+    NotificationDetails platform = NotificationDetails(
+      android,
+      iOS,
+    );
+    await _flutterLocalNotificationsPlugin.schedule(
+      thougth.hashCode,
+      thougth.thougth,
+      "- ${thougth.author}",
+      DateTime.now()..add(Duration(days: 1)),
+      platform,
+      payload: "",
+    );
   }
 
   List<Thougth> get thoughts {
