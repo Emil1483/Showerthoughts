@@ -23,7 +23,8 @@
         <receiver android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationReceiver" />
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-             android:value="ca-app-pub-1625083960686206~4886520744"/>
+            android:value="ca-app-pub-1625083960686206~4886520744"/>
+        <meta-data android:name="google_analytics_adid_collection_enabled" android:value="false" />
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
