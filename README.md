@@ -1,16 +1,5 @@
 # showerthoughts
 
-A new Flutter project.
+This app is made by me, a private individual, as part of my portfolio. If you are looking for a flutter developer (developer for both iOS and Android), please send me an email at emil14833@gmail.com.
 
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our 
-[online documentation](https://flutter.dev/docs), which offers tutorials, 
-samples, guidance on mobile development, and a full API reference.
+This app is also avalable at the google play store [here](https://play.google.com/store/apps/details?id=com.djupvik.showerthoughts)
