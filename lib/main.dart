@@ -9,15 +9,7 @@ import './routes/terms_route.dart';
 import './scoped_model/main_model.dart';
 import './advert_ids.dart';
 
-void main() {
-  FirebaseAdMob.instance.initialize(appId: AdvertIds.appId);
-  SystemChrome.setSystemUIOverlayStyle(
-    SystemUiOverlayStyle(
-      systemNavigationBarColor: Colors.black,
-    ),
-  );
-  runApp(MyApp());
-}
+void main() => runApp(MyApp());
 
 class MyApp extends StatefulWidget {
   @override
@@ -54,6 +46,12 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
+    FirebaseAdMob.instance.initialize(appId: AdvertIds.appId);
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        systemNavigationBarColor: Colors.black,
+      ),
+    );
     return ScopedModel<MainModel>(
       model: _mainModel,
       child: MaterialApp(

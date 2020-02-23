@@ -1,13 +1,15 @@
 import 'dart:async';
 import 'dart:convert' show json, utf8;
 import 'dart:io';
+import 'package:http/http.dart' as http;
 
 import '../models/thought.dart';
 
 class Api {
   final HttpClient _httpClient = HttpClient();
   int currentLen = 0;
-  String _lastPost = "t3_bpql00";
+  String _lastPost = "t3_f6z3vd";
+  bool _triedFixing = false;
 
   static int batchSize = 10;
 
@@ -84,7 +86,15 @@ class Api {
 
       final jsonResponse = json.decode(responseBody);
       final int len = jsonResponse["data"]["children"].length;
-      if (len <= 0) return null;
+      if (len <= 0) {
+        if (_triedFixing) return null;
+        final r = await http
+            .get("https://shower-thoughts-ad887.firebaseio.com/data.json");
+        final data = json.decode(r.body);
+        _lastPost = data;
+        _triedFixing = true;
+        return nextThougths();
+      }
       List<Thougth> result = [];
       for (int i = 0; i < len; i++) {
         result.add(
