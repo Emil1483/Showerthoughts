@@ -1,4 +1,4 @@
-package com.example.new_temp
+package com.djupvik.showerthoughts
 
 import androidx.annotation.NonNull;
 import io.flutter.embedding.android.FlutterActivity
