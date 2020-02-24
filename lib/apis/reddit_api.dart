@@ -95,6 +95,7 @@ class Api {
         _triedFixing = true;
         return nextThougths();
       }
+      _triedFixing = true;
       List<Thougth> result = [];
       for (int i = 0; i < len; i++) {
         result.add(
