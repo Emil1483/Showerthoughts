@@ -145,7 +145,8 @@ class MainModel extends Model {
   void purchase(BuildContext context) async {
     if (!_available || _purchased) return;
     try {
-      PurchasedItem result = await FlutterInappPurchase.instance.requestPurchase(
+      PurchasedItem result =
+          await FlutterInappPurchase.instance.requestPurchase(
         _items[0].productId,
       );
       SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -167,7 +168,6 @@ class MainModel extends Model {
         "thinking",
       ],
       childDirected: false,
-      designedForFamilies: false,
       testDevices: <String>["3C2BACC3B6177D291D421EFA6B1DBCE3"],
     );
   }
