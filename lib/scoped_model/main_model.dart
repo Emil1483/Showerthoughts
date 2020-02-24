@@ -118,12 +118,13 @@ class MainModel extends Model {
 
   Future _initPurchase() async {
     try {
-      await FlutterInappPurchase.initConnection;
+      await FlutterInappPurchase.instance.initConnection;
       await _getItems();
 
       //When developing for iOS, please check https://stackoverflow.com/questions/54911966/flutter-how-to-check-that-autorenewal-subscription-is-still-valid
 
-      var purchases = await FlutterInappPurchase.getAvailablePurchases();
+      var purchases =
+          await FlutterInappPurchase.instance.getAvailablePurchases();
       for (var purchase in purchases) {
         if (purchase.productId == iapId) _purchased = true;
       }
@@ -136,14 +137,15 @@ class MainModel extends Model {
   }
 
   Future _getItems() async {
-    List<IAPItem> items = await FlutterInappPurchase.getProducts([iapId]);
+    List<IAPItem> items =
+        await FlutterInappPurchase.instance.getProducts([iapId]);
     _items.addAll(items);
   }
 
   void purchase(BuildContext context) async {
     if (!_available || _purchased) return;
     try {
-      PurchasedItem result = await FlutterInappPurchase.buyProduct(
+      PurchasedItem result = await FlutterInappPurchase.instance.requestPurchase(
         _items[0].productId,
       );
       SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -203,7 +205,7 @@ class MainModel extends Model {
 
   void dispose() {
     _disposeAds();
-    FlutterInappPurchase.endConnection;
+    FlutterInappPurchase.instance.endConnection;
   }
 
   void _disposeAds() {
