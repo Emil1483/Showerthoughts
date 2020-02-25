@@ -47,8 +47,8 @@ android {
         applicationId "com.djupvik.showerthoughts"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 12
-        versionName "2.8"
+        versionCode 13
+        versionName "2.9"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
